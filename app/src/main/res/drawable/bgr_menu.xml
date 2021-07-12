@@ -11,10 +11,12 @@
         <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
             <item>
                 <shape android:shape="rectangle">
-                    <stroke android:width="2dp" android:color="@color/black" />
+                    <stroke
+                        android:width="@dimen/stroke_width"
+                        android:color="@color/black" />
                 </shape>
             </item>
-            <item android:bottom="2dp">
+            <item android:bottom="@dimen/padding_2">
                 <shape android:shape="rectangle" >
                     <solid android:color="@color/white" />
                 </shape>

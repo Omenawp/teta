@@ -4,11 +4,11 @@
         android:id="@+id/page_1"
         android:enabled="false"
         android:icon="@drawable/ic_home"
-        android:title="@string/to_home"/>
+        android:title="@string/nav_to_home"/>
 
     <item
         android:id="@+id/page_2"
         android:enabled="true"
         android:icon="@drawable/ic_profile"
-        android:title="@string/to_profile"/>
+        android:title="@string/nav_to_profile"/>
 </menu>

@@ -2,13 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingHorizontal="5dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/photo"
-        android:layout_width="@dimen/pic_width"
-        android:layout_height="196dp"
+        android:layout_width="@dimen/md_actor_image_width"
+        android:layout_height="@dimen/md_actor_image_height"
         android:scaleType="centerCrop"
         android:src="@drawable/image_hartnett"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,7 +17,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/margin_x4_small"
         android:text="@string/actor_hartnett"
         android:textSize="@dimen/text_size_small"
         android:textStyle="bold"

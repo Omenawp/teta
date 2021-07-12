@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="small_margin">10dp</dimen>
-    <dimen name="margin">20dp</dimen>
-    <dimen name="double_margin">40dp</dimen>
+    <!-- margins -->
+    <dimen name="margin_main_double">40dp</dimen>
+    <dimen name="margin_main">20dp</dimen>
+    <dimen name="margin_main_small">10dp</dimen>
 
-    <dimen name="title_size_big">20sp</dimen>
-    <dimen name="title_size_small">16sp</dimen>
-    <dimen name="text_size_main">14sp</dimen>
+    <dimen name="margin_x4_large">36dp</dimen>
+    <dimen name="margin_x4_big">32dp</dimen>
+    <dimen name="margin_x4_middle">16dp</dimen>
+    <dimen name="margin_x4_small">12dp</dimen>
+    <dimen name="margin_x4_tiny">8dp</dimen>
+
+    <!-- textSize -->
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_big">16sp</dimen>
+    <dimen name="text_size_middle">14sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_tiny">10sp</dimen>
 
-    <dimen name="pic_width">150dp</dimen>
+    <dimen name="md_actor_image_width">150dp</dimen>
+    <dimen name="md_actor_image_height">196dp</dimen>
+    <dimen name="md_age_ic_width">40dp</dimen>
+    <dimen name="md_rating_height">16dp</dimen>
+    <dimen name="bottom_nav_view_height">48dp</dimen>
+    
+    <dimen name="corner_radius_big">20dp</dimen>
+    <dimen name="corner_radius_small">10dp</dimen>
+
+    <dimen name="stroke_width_tiny">1dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
+    <dimen name="stroke_width_poster">10dp</dimen>
+
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_4">4dp</dimen>
+    <dimen name="padding_2">2dp</dimen>
+
+    <dimen name="padding_poster_double">-20dp</dimen>
+    <dimen name="padding_poster">-10dp</dimen>
 </resources>
