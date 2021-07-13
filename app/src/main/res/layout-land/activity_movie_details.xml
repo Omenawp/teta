@@ -19,7 +19,7 @@
             android:id="@+id/about_movie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_main_double">
+            android:paddingBottom="@dimen/movie_detail_margin_main_to_bottom">
 
             <ImageView
                 android:id="@+id/image_poster"
@@ -41,7 +41,7 @@
                 android:layout_marginTop="@dimen/margin_main"
                 android:background="@drawable/bgr_genre"
                 android:text="@string/movie_genre_action"
-                android:textSize="@dimen/text_size_tiny"
+                android:textSize="@dimen/movie_detail_text_size_genre"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,24 +49,24 @@
                 android:id="@+id/movie_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_x4_middle"
+                android:layout_marginStart="@dimen/movie_detail_margin_data_start"
                 android:text="@string/movie_data"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/movie_detail_text_size_data"
                 app:layout_constraintBottom_toBottomOf="@+id/movie_genre_name"
                 app:layout_constraintStart_toEndOf="@+id/movie_genre_name"
                 app:layout_constraintTop_toTopOf="@+id/movie_genre_name" />
 
             <TextView
                 android:id="@+id/movie_age_level"
-                android:layout_width="@dimen/md_age_ic_width"
-                android:layout_height="@dimen/md_age_ic_width"
-                android:layout_marginTop="@dimen/margin_main_double"
+                android:layout_width="@dimen/movie_detail_size_age_ic"
+                android:layout_height="@dimen/movie_detail_size_age_ic"
+                android:layout_marginTop="@dimen/movie_detail_margin_age_ic_to_top"
                 android:layout_marginEnd="@dimen/margin_main"
                 android:background="@drawable/bgr_circle"
                 android:textAlignment="center"
-                android:paddingVertical="@dimen/padding_10"
+                android:paddingVertical="@dimen/movie_detail_paddings_age_ic"
                 android:text="@string/age_level_18_up"
-                android:textSize="@dimen/text_size_middle"
+                android:textSize="@dimen/movie_detail_text_size_age"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,10 +75,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_main"
-                android:layout_marginTop="@dimen/margin_x4_middle"
+                android:layout_marginTop="@dimen/movie_detail_margin_title_to_top"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/movie_title"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/movie_detail_text_size_title_movie"
                 app:layout_constraintEnd_toStartOf="@+id/movie_age_level"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
                 app:layout_constraintTop_toBottomOf="@+id/movie_data" />
@@ -86,10 +86,10 @@
             <com.oelrun.teta.RatingView
                 android:id="@+id/movie_rating"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/md_rating_height"
+                android:layout_height="@dimen/movie_detail_height_rating"
                 app:rating="@integer/movie_rating_temp"
                 android:layout_marginStart="@dimen/margin_main"
-                android:layout_marginTop="@dimen/margin_x4_tiny"
+                android:layout_marginTop="@dimen/movie_detail_margin_rating_to_title"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
                 app:layout_constraintTop_toBottomOf="@+id/movie_title"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -99,9 +99,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_main"
-                android:layout_marginTop="@dimen/margin_main"
+                android:layout_marginTop="@dimen/movie_detail_margin_description_to_rating"
                 android:text="@string/movie_description"
-                android:textSize="@dimen/text_size_middle"
+                android:textSize="@dimen/movie_detail_text_size_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="2"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
@@ -120,10 +120,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_main"
-                android:layout_marginTop="@dimen/margin_main"
+                android:layout_marginTop="@dimen/movie_detail_margin_actors_title_to_description"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/actors_title"
-                android:textSize="@dimen/text_size_big"
+                android:textSize="@dimen/movie_detail_text_size_actors_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/barrier" />
 
@@ -131,7 +131,7 @@
                 android:id="@+id/actors_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_x4_middle"
+                android:layout_marginTop="@dimen/movie_detail_margin_actors_container_top"
                 android:overScrollMode="never"
                 android:scrollbars="none"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -140,18 +140,18 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingHorizontal="@dimen/margin_main">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/margin_main"
-                        android:paddingEnd="@dimen/margin_main_small">
+                        android:paddingEnd="@dimen/movie_detail_padding_actor_card_end">
 
                         <ImageView
                             android:id="@+id/actor_photo_1"
-                            android:layout_width="@dimen/md_actor_image_width"
-                            android:layout_height="@dimen/md_actor_image_height"
+                            android:layout_width="@dimen/movie_detail_width_actor_image"
+                            android:layout_height="@dimen/movie_detail_height_actor_image"
                             android:scaleType="centerCrop"
                             android:src="@drawable/image_statham"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -161,9 +161,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_x4_small"
+                            android:layout_marginTop="@dimen/movie_detail_margin_actors_card_name_top"
                             android:text="@string/actor_statham"
-                            android:textSize="@dimen/text_size_small"
+                            android:textSize="@dimen/movie_detail_text_size_actors_name"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -174,12 +174,12 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/margin_main_small">
+                        android:paddingEnd="@dimen/movie_detail_padding_actor_card_end">
 
                         <ImageView
                             android:id="@+id/actor_photo_2"
-                            android:layout_width="@dimen/md_actor_image_width"
-                            android:layout_height="@dimen/md_actor_image_height"
+                            android:layout_width="@dimen/movie_detail_width_actor_image"
+                            android:layout_height="@dimen/movie_detail_height_actor_image"
                             android:scaleType="centerCrop"
                             android:src="@drawable/image_mccallany"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -189,9 +189,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_x4_small"
+                            android:layout_marginTop="@dimen/movie_detail_margin_actors_card_name_top"
                             android:text="@string/actor_mccallany"
-                            android:textSize="@dimen/text_size_small"
+                            android:textSize="@dimen/movie_detail_text_size_actors_name"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -201,13 +201,12 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/margin_main">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/actor_photo_3"
-                            android:layout_width="@dimen/md_actor_image_width"
-                            android:layout_height="@dimen/md_actor_image_height"
+                            android:layout_width="@dimen/movie_detail_width_actor_image"
+                            android:layout_height="@dimen/movie_detail_height_actor_image"
                             android:scaleType="centerCrop"
                             android:src="@drawable/image_hartnett"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -217,9 +216,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_x4_small"
+                            android:layout_marginTop="@dimen/movie_detail_margin_actors_card_name_top"
                             android:text="@string/actor_hartnett"
-                            android:textSize="@dimen/text_size_small"
+                            android:textSize="@dimen/movie_detail_text_size_actors_name"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -234,7 +233,7 @@
     <ImageView
         android:id="@+id/button_nav_to_home"
         android:layout_width="0dp"
-        android:layout_height="@dimen/bottom_nav_view_height"
+        android:layout_height="@dimen/movie_detail_height_bnv"
         android:background="@drawable/bgr_menu"
         android:scaleType="center"
         android:src="@drawable/ic_home"
@@ -245,7 +244,7 @@
     <ImageView
         android:id="@+id/button_nav_to_profile"
         android:layout_width="0dp"
-        android:layout_height="@dimen/bottom_nav_view_height"
+        android:layout_height="@dimen/movie_detail_height_bnv"
         android:background="@color/white"
         android:scaleType="center"
         android:src="@drawable/ic_profile"

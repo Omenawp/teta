@@ -1,40 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- margins -->
-    <dimen name="margin_main_double">40dp</dimen>
     <dimen name="margin_main">20dp</dimen>
-    <dimen name="margin_main_small">10dp</dimen>
 
-    <dimen name="margin_x4_large">36dp</dimen>
-    <dimen name="margin_x4_big">32dp</dimen>
-    <dimen name="margin_x4_middle">16dp</dimen>
-    <dimen name="margin_x4_small">12dp</dimen>
-    <dimen name="margin_x4_tiny">8dp</dimen>
+    <!-- movie_detail_screen -->
+    <dimen name="movie_detail_margin_main_to_bottom">40dp</dimen>
+    <dimen name="movie_detail_margin_genre_to_top">32dp</dimen>
+    <dimen name="movie_detail_margin_data_start">16dp</dimen>
+    <dimen name="movie_detail_margin_age_ic_to_top">40dp</dimen>
+    <dimen name="movie_detail_margin_title_to_top">16dp</dimen>
+    <dimen name="movie_detail_margin_rating_to_title">8dp</dimen>
+    <dimen name="movie_detail_margin_description_to_rating">20dp</dimen>
+    <dimen name="movie_detail_margin_actors_title_to_description">36dp</dimen>
+    <dimen name="movie_detail_margin_actors_container_top">20dp</dimen>
+    <dimen name="movie_detail_margin_actors_card_name_top">10dp</dimen>
 
     <!-- textSize -->
-    <dimen name="text_size_large">20sp</dimen>
-    <dimen name="text_size_big">16sp</dimen>
-    <dimen name="text_size_middle">14sp</dimen>
-    <dimen name="text_size_small">12sp</dimen>
-    <dimen name="text_size_tiny">10sp</dimen>
+    <dimen name="movie_detail_text_size_genre">10sp</dimen>
+    <dimen name="movie_detail_text_size_data">12sp</dimen>
+    <dimen name="movie_detail_text_size_age">14sp</dimen>
+    <dimen name="movie_detail_text_size_title_movie">20sp</dimen>
+    <dimen name="movie_detail_text_size_description">14sp</dimen>
+    <dimen name="movie_detail_text_size_actors_title">16sp</dimen>
+    <dimen name="movie_detail_text_size_actors_name">12sp</dimen>
 
-    <dimen name="md_actor_image_width">150dp</dimen>
-    <dimen name="md_actor_image_height">196dp</dimen>
-    <dimen name="md_age_ic_width">40dp</dimen>
-    <dimen name="md_rating_height">16dp</dimen>
-    <dimen name="bottom_nav_view_height">48dp</dimen>
-    
-    <dimen name="corner_radius_big">20dp</dimen>
-    <dimen name="corner_radius_small">10dp</dimen>
+    <!-- paddings -->
+    <dimen name="movie_detail_paddings_age_ic">10dp</dimen>
+    <dimen name="movie_detail_padding_actor_card_end">10dp</dimen>
 
-    <dimen name="stroke_width_tiny">1dp</dimen>
-    <dimen name="stroke_width">2dp</dimen>
-    <dimen name="stroke_width_poster">10dp</dimen>
+    <!-- width/height -->
+    <dimen name="movie_detail_size_age_ic">40dp</dimen>
+    <dimen name="movie_detail_height_rating">16dp</dimen>
+    <dimen name="movie_detail_width_actor_image">150dp</dimen>
+    <dimen name="movie_detail_height_actor_image">196dp</dimen>
+    <dimen name="movie_detail_height_bnv">48dp</dimen>
 
-    <dimen name="padding_10">10dp</dimen>
-    <dimen name="padding_4">4dp</dimen>
-    <dimen name="padding_2">2dp</dimen>
+    <!-- bgr -->
+    <dimen name="movie_detail_corner_radius_card">30dp</dimen>
+    <dimen name="movie_detail_corner_radius_genre">10dp</dimen>
+    <dimen name="movie_detail_corner_radius_poster">20dp</dimen>
 
-    <dimen name="padding_poster_double">-20dp</dimen>
-    <dimen name="padding_poster">-10dp</dimen>
+    <dimen name="movie_detail_stroke_width_circle">1dp</dimen>
+    <dimen name="movie_detail_stroke_width_genre">1dp</dimen>
+    <dimen name="movie_detail_stroke_width_menu">2dp</dimen>
+    <dimen name="movie_detail_stroke_width_poster">10dp</dimen>
+
+    <dimen name="movie_detail_padding_genre_bgr_vert">4dp</dimen>
+    <dimen name="movie_detail_padding_genre_bgr_hor">10dp</dimen>
+    <dimen name="movie_detail_padding_menu_bgr_bottom">2dp</dimen>
+
+    <dimen name="movie_detail_padding_poster_double">-20dp</dimen>
+    <dimen name="movie_detail_padding_poster">-10dp</dimen>
 </resources>

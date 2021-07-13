@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:bottom="@dimen/padding_poster_double"
-        android:left="@dimen/padding_poster"
-        android:right="@dimen/padding_poster"
-        android:top="@dimen/padding_poster">
-        <shape android:shape="rectangle">
+        android:bottom="@dimen/movie_detail_padding_poster_double"
+        android:left="@dimen/movie_detail_padding_poster"
+        android:right="@dimen/movie_detail_padding_poster"
+        android:top="@dimen/movie_detail_padding_poster">
+        <shape
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:shape="rectangle">
             <stroke
-                android:width="@dimen/stroke_width_poster"
+                android:width="@dimen/movie_detail_stroke_width_poster"
                 android:color="@color/blue_700" />
-            <corners android:radius="@dimen/corner_radius_big" />
+            <corners android:radius="@dimen/movie_detail_corner_radius_poster" />
         </shape>
     </item>
 </layer-list>

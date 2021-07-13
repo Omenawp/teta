@@ -2,11 +2,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <stroke
         android:color="@color/black"
-        android:width="@dimen/stroke_width_tiny"/>
-    <corners android:radius="@dimen/corner_radius_small" />
+        android:width="@dimen/movie_detail_stroke_width_genre"/>
+    <corners android:radius="@dimen/movie_detail_corner_radius_genre" />
     <padding
-        android:top="@dimen/padding_4"
-        android:bottom="@dimen/padding_4"
-        android:left="@dimen/padding_10"
-        android:right="@dimen/padding_10"/>
+        android:top="@dimen/movie_detail_padding_genre_bgr_vert"
+        android:bottom="@dimen/movie_detail_padding_genre_bgr_vert"
+        android:left="@dimen/movie_detail_padding_genre_bgr_hor"
+        android:right="@dimen/movie_detail_padding_genre_bgr_hor"/>
 </shape>

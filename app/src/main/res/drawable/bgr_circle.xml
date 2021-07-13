@@ -3,5 +3,5 @@
     android:shape="oval">
     <stroke
         android:color="@color/black"
-        android:width="@dimen/stroke_width_tiny"/>
+        android:width="@dimen/movie_detail_stroke_width_circle"/>
 </shape>

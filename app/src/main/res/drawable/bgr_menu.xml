@@ -12,11 +12,11 @@
             <item>
                 <shape android:shape="rectangle">
                     <stroke
-                        android:width="@dimen/stroke_width"
+                        android:width="@dimen/movie_detail_stroke_width_menu"
                         android:color="@color/black" />
                 </shape>
             </item>
-            <item android:bottom="@dimen/padding_2">
+            <item android:bottom="@dimen/movie_detail_padding_menu_bgr_bottom">
                 <shape android:shape="rectangle" >
                     <solid android:color="@color/white" />
                 </shape>
