@@ -25,7 +25,6 @@
                 android:id="@+id/image_poster"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:foreground="@drawable/brg_poster"
                 android:scaleType="centerCrop"
                 android:src="@drawable/image_poster"
                 app:layout_constraintEnd_toStartOf="@id/movie_description"
@@ -165,7 +164,6 @@
                             android:text="@string/actor_statham"
                             android:textSize="@dimen/movie_detail_text_size_actors_name"
                             android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/actor_photo_1" />
 
@@ -193,7 +191,6 @@
                             android:text="@string/actor_mccallany"
                             android:textSize="@dimen/movie_detail_text_size_actors_name"
                             android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/actor_photo_2" />
 
@@ -220,7 +217,6 @@
                             android:text="@string/actor_hartnett"
                             android:textSize="@dimen/movie_detail_text_size_actors_name"
                             android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/actor_photo_3" />
 

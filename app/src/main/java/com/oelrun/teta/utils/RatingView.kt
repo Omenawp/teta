@@ -19,14 +19,14 @@ class RatingView@JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        val filled = ContextCompat.getDrawable(context, R.drawable.ic_star_filled)!!
-        val empty = ContextCompat.getDrawable(context, R.drawable.ic_star_blank)!!
+        val filled = ContextCompat.getDrawable(context, R.drawable.ic_star_filled)
+        val empty = ContextCompat.getDrawable(context, R.drawable.ic_star_blank)
 
         for(i in 1..5) {
             val w = height * (i - 1)
             val pic = if(rating >= i) filled else empty
-            pic.setBounds(w,0, w + height, height)
-            pic.draw(canvas)
+            pic?.setBounds(w,0, w + height, height)
+            pic?.draw(canvas)
         }
     }
 }

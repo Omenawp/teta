@@ -43,12 +43,8 @@
     <dimen name="movie_detail_stroke_width_circle">1dp</dimen>
     <dimen name="movie_detail_stroke_width_genre">1dp</dimen>
     <dimen name="movie_detail_stroke_width_menu">2dp</dimen>
-    <dimen name="movie_detail_stroke_width_poster">10dp</dimen>
 
     <dimen name="movie_detail_padding_genre_bgr_vert">4dp</dimen>
     <dimen name="movie_detail_padding_genre_bgr_hor">10dp</dimen>
     <dimen name="movie_detail_padding_menu_bgr_bottom">2dp</dimen>
-
-    <dimen name="movie_detail_padding_poster_double">-20dp</dimen>
-    <dimen name="movie_detail_padding_poster">-10dp</dimen>
 </resources>
