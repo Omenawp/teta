@@ -1,4 +1,4 @@
-package com.oelrun.teta
+package com.oelrun.teta.utils
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,11 +6,12 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
+import com.oelrun.teta.R
 
 class RatingView@JvmOverloads constructor(
-    context: Context, val attrs: AttributeSet? = null) : View(context, attrs) {
+    context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
-    private var rating = 0
+    var rating = 0
 
     init {
         context.withStyledAttributes(attrs, R.styleable.RatingView) {

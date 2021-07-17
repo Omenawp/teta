@@ -82,7 +82,7 @@
                 app:layout_constraintStart_toEndOf="@id/image_poster"
                 app:layout_constraintTop_toBottomOf="@+id/movie_data" />
 
-            <com.oelrun.teta.RatingView
+            <com.oelrun.teta.utils.RatingView
                 android:id="@+id/movie_rating"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/movie_detail_height_rating"
@@ -230,7 +230,7 @@
         android:id="@+id/button_nav_to_home"
         android:layout_width="0dp"
         android:layout_height="@dimen/movie_detail_height_bnv"
-        android:background="@drawable/bgr_menu"
+        android:background="@drawable/bgr_menu_temp"
         android:scaleType="center"
         android:src="@drawable/ic_home"
         app:layout_constraintBottom_toBottomOf="parent"
