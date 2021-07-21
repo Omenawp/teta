@@ -10,12 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.oelrun.teta.data.genre.GenreDto
 import com.oelrun.teta.data.genre.GenresDataSource
 import com.oelrun.teta.data.movie.MoviesDataSource
 import com.oelrun.teta.movies.*
-
-const val FIRST_VISIBLE_ITEM_MOVIE = "key_first_visible_item_movie"
-const val FIRST_VISIBLE_ITEM_GENRE = "key_first_visible_item_genre"
 
 class MainActivity : AppCompatActivity() {
 
@@ -82,11 +80,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         listGenres = findViewById(R.id.list_genres)
-        val adapterGenres = GenresAdapter(GenreListener { item ->
+
+        val data = GenresDataSource().getGenres()
+        val adapterGenres = GenresAdapter()
+        val onItemGenresClicked = { item: GenreDto ->
             Toast.makeText(this, item.name, Toast.LENGTH_SHORT).show()
-        })
+            val i = data.indexOf(item)
+            data[i].selected = !item.selected
+            adapterGenres.notifyDataSetChanged()
+        }
+
+        adapterGenres.clickListener = onItemGenresClicked
+        adapterGenres.list = data
         listGenres.adapter = adapterGenres
-        adapterGenres.list = GenresDataSource().getGenres()
         listGenres.addItemDecoration(GenresItemDecoration())
         listGenres.smoothScrollToPosition(firstItemGenre)
     }
@@ -102,4 +108,10 @@ class MainActivity : AppCompatActivity() {
         outState.putInt(FIRST_VISIBLE_ITEM_MOVIE, firstItemMovie)
         outState.putInt(FIRST_VISIBLE_ITEM_GENRE, firstItemGenre)
     }
+
+    companion object {
+        private const val FIRST_VISIBLE_ITEM_MOVIE = "key_first_visible_item_movie"
+        private const val FIRST_VISIBLE_ITEM_GENRE = "key_first_visible_item_genre"
+    }
+
 }

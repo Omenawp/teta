@@ -1,17 +1,16 @@
 package com.oelrun.teta.movies
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.oelrun.teta.R
 import com.oelrun.teta.data.movie.MovieDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-private const val ITEM_VIEW_TYPE_HEADER = 0
-private const val ITEM_VIEW_TYPE_ITEM = 1
 
 class MoviesAdapter(private val clickListener: MoviesListener):
     ListAdapter<DataItem, RecyclerView.ViewHolder>(MoviesDiffCallback()) {
@@ -48,51 +47,25 @@ class MoviesAdapter(private val clickListener: MoviesListener):
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
-            ITEM_VIEW_TYPE_HEADER -> HeaderViewHolder.from(parent)
-            ITEM_VIEW_TYPE_ITEM -> MovieViewHolder.from(parent)
+            ITEM_VIEW_TYPE_HEADER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.list_item_movie_header, parent, false)
+                HeaderViewHolder(view)
+            }
+            ITEM_VIEW_TYPE_ITEM -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.list_item_movie, parent, false)
+                MovieViewHolder(view)
+            }
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
 
-    /*class MovieViewHolder private constructor(private val view: View) :
-        RecyclerView.ViewHolder(view) {
+    companion object {
+        private const val ITEM_VIEW_TYPE_HEADER = 0
+        private const val ITEM_VIEW_TYPE_ITEM = 1
+    }
 
-        private val title: TextView = view.findViewById(R.id.movie_title)
-        private val description: TextView = view.findViewById(R.id.movie_description)
-        private val rating: RatingView = view.findViewById(R.id.rating_view)
-        private val ageLevel: TextView = view.findViewById(R.id.age_level)
-        private val posterImage: ImageView = view.findViewById(R.id.poster_image)
-
-        fun bind(clickListener: MoviesListener, item: MovieDto) {
-            title.text = item.title
-            description.text = item.description
-            rating.rating = item.rateScore
-            posterImage.load(item.imageUrl)
-            val textAge = item.ageRestriction.toString() + '+'
-            ageLevel.text = textAge
-
-            view.setOnClickListener { clickListener.onClick(item.title) }
-        }
-
-        companion object {
-            fun from(parent: ViewGroup): MovieViewHolder {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_movie, parent, false)
-
-                return MovieViewHolder(view)
-            }
-        }
-    }*/
-
-    /*class HeaderViewHolder(view: View): RecyclerView.ViewHolder(view){
-        companion object{
-            fun from(parent: ViewGroup): HeaderViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.list_item_movie_header, parent, false)
-                return HeaderViewHolder(view)
-            }
-        }
-    }*/
 }
 
 class MoviesDiffCallback: DiffUtil.ItemCallback<DataItem>() {

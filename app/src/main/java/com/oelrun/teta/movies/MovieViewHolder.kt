@@ -1,8 +1,6 @@
 package com.oelrun.teta.movies
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -29,14 +27,5 @@ class MovieViewHolder(private val view: View) :
         ageLevel.text = textAge
 
         view.setOnClickListener { clickListener.onClick(item.title) }
-    }
-
-    companion object {
-        fun from(parent: ViewGroup): MovieViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.list_item_movie, parent, false)
-
-            return MovieViewHolder(view)
-        }
     }
 }

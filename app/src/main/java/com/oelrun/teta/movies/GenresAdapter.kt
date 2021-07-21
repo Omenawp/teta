@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.R
 import com.oelrun.teta.data.genre.GenreDto
 
-class GenresAdapter(private val clickListener: GenreListener)
-    : RecyclerView.Adapter<GenresAdapter.ViewHolder>() {
+class GenresAdapter: RecyclerView.Adapter<GenresAdapter.ViewHolder>() {
 
+    lateinit var clickListener: (item: GenreDto) -> Unit
     var list = listOf<GenreDto>()
         set(value) {
             field = value
@@ -32,22 +32,18 @@ class GenresAdapter(private val clickListener: GenreListener)
     class ViewHolder (private val view: View) :
         RecyclerView.ViewHolder(view) {
 
-        private var selectedItems = mutableListOf<Int>()
-
-        fun bind(clickListener: GenreListener, item: GenreDto) {
+        fun bind(clickListener: (item: GenreDto) -> Unit, item: GenreDto) {
             view as TextView
             view.text = item.name
+            view.setBackgroundResource(
+                if(item.selected) R.drawable.bgr_genre_selected else R.drawable.bgr_genre
+            )
+            view.setTextColor(
+                if(item.selected) Color.WHITE else Color.BLACK
+            )
+
             view.setOnClickListener {
-                clickListener.onClick(item)
-                if(selectedItems.contains(item.id)) {
-                    view.setBackgroundResource(R.drawable.bgr_genre)
-                    view.setTextColor(Color.BLACK)
-                    selectedItems.remove(item.id)
-                } else {
-                    view.setBackgroundResource(R.drawable.bgr_genre_selected)
-                    view.setTextColor(Color.WHITE)
-                    selectedItems.add(item.id)
-                }
+                clickListener(item)
             }
         }
 
@@ -60,8 +56,4 @@ class GenresAdapter(private val clickListener: GenreListener)
             }
         }
     }
-}
-
-class GenreListener(val clickListener: (item: GenreDto) -> Unit) {
-    fun onClick(item: GenreDto) = clickListener(item)
 }
