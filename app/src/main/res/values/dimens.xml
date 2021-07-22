@@ -15,6 +15,16 @@
     <dimen name="movie_detail_margin_actors_container_top">20dp</dimen>
     <dimen name="movie_detail_margin_actors_card_name_top">10dp</dimen>
 
+    <dimen name="item_movie_margin_movie_title_top">8dp</dimen>
+    <dimen name="item_movie_margin_movie_description_top">10dp</dimen>
+    <dimen name="item_movie_margin_movie_rating_top">16dp</dimen>
+    <dimen name="item_movie_margin_movie_to_frame">4dp</dimen>
+    <dimen name="item_movie_margin_movie_age_to_frame">2dp</dimen>
+    <dimen name="item_genre_margin_main">8dp</dimen>
+    <dimen name="item_genre_margin_border">20dp</dimen>
+    <dimen name="item_movie_margin_bottom">50dp</dimen>
+    <dimen name="item_movie_header_margin">10dp</dimen>
+
     <!-- textSize -->
     <dimen name="movie_detail_text_size_genre">10sp</dimen>
     <dimen name="movie_detail_text_size_data">12sp</dimen>
@@ -23,10 +33,21 @@
     <dimen name="movie_detail_text_size_description">14sp</dimen>
     <dimen name="movie_detail_text_size_actors_title">16sp</dimen>
     <dimen name="movie_detail_text_size_actors_name">12sp</dimen>
+    <dimen name="movies_all_text_size_title">16sp</dimen>
+    <dimen name="movies_all_text_size_movie_title">14sp</dimen>
+    <dimen name="movies_all_text_size_movie_description">12sp</dimen>
+    <dimen name="movies_all_text_size_movie_age_level">8sp</dimen>
+    <dimen name="item_genre_text_size_genre">10sp</dimen>
+    <dimen name="item_movie_text_size_movie_title">14sp</dimen>
+    <dimen name="item_movie_text_size_movie_description">12sp</dimen>
+    <dimen name="item_movie_text_size_movie_age_level">8sp</dimen>
+    <dimen name="movies_all_text_size_error_message">12sp</dimen>
 
     <!-- paddings -->
     <dimen name="movie_detail_paddings_age_ic">10dp</dimen>
     <dimen name="movie_detail_padding_actor_card_end">10dp</dimen>
+    <dimen name="movies_all_padding_genres_top">12dp</dimen>
+    <dimen name="movies_all_padding_genres_bottom">16dp</dimen>
 
     <!-- width/height -->
     <dimen name="movie_detail_size_age_ic">40dp</dimen>
@@ -34,11 +55,18 @@
     <dimen name="movie_detail_width_actor_image">150dp</dimen>
     <dimen name="movie_detail_height_actor_image">196dp</dimen>
     <dimen name="movie_detail_height_bnv">48dp</dimen>
+    <dimen name="item_movie_height_rating">14dp</dimen>
+    <dimen name="item_movie_size_age_ic">20dp</dimen>
+    <dimen name="item_movie_width">150dp</dimen>
+    <dimen name="item_movie_height">380dp</dimen>
+    <dimen name="item_movie_height_poster_image">216dp</dimen>
+    <dimen name="menu_icon_size">16dp</dimen>
 
     <!-- bgr -->
     <dimen name="movie_detail_corner_radius_card">30dp</dimen>
     <dimen name="movie_detail_corner_radius_genre">10dp</dimen>
     <dimen name="movie_detail_corner_radius_poster">20dp</dimen>
+    <dimen name="item_movie_corner_radius_poster">10dp</dimen>
 
     <dimen name="movie_detail_stroke_width_circle">1dp</dimen>
     <dimen name="movie_detail_stroke_width_genre">1dp</dimen>

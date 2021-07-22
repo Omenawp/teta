@@ -5,6 +5,10 @@
     <string name="nav_to_home">home</string>
     <string name="nav_to_profile">profile</string>
 
+    <string name="movie_list_item_header_title">Down, down, to the rabbit hole!</string>
+    <string name="movie_list_error_message">For now there aren\'t any movies</string>
+    <string name="movies_all_title">Популярное сейчас</string>
+
     <!-- movie temp -->
 
     <string name="movie_description">Эйч — загадочный и холодный на вид джентльмен, но внутри него пылает

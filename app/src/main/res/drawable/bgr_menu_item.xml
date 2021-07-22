@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="true">
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+
+    <item android:state_enabled="false">
+        <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke
+                        android:width="@dimen/movie_detail_stroke_width_menu"
+                        android:color="@color/black" />
+                </shape>
+            </item>
+            <item android:bottom="@dimen/movie_detail_padding_menu_bgr_bottom">
+                <shape android:shape="rectangle" >
+                    <solid android:color="@color/white" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>
