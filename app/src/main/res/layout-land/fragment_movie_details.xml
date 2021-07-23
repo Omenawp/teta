@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:overScrollMode="never"
-        app:layout_constraintBottom_toTopOf="@id/button_nav_to_home"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image_poster"
+                tools:src="@drawable/image_poster"
                 app:layout_constraintEnd_toStartOf="@id/movie_description"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
                 android:layout_marginStart="@dimen/margin_main"
                 android:layout_marginTop="@dimen/margin_main"
                 android:background="@drawable/bgr_genre"
-                android:text="@string/movie_genre_action"
+                tools:text="@string/movie_genre_action"
                 android:textSize="@dimen/movie_detail_text_size_genre"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/movie_detail_margin_data_start"
-                android:text="@string/movie_data"
+                tools:text="@string/movie_data"
                 android:textSize="@dimen/movie_detail_text_size_data"
                 app:layout_constraintBottom_toBottomOf="@+id/movie_genre_name"
                 app:layout_constraintStart_toEndOf="@+id/movie_genre_name"
@@ -64,7 +64,7 @@
                 android:background="@drawable/bgr_circle"
                 android:textAlignment="center"
                 android:paddingVertical="@dimen/movie_detail_paddings_age_ic"
-                android:text="@string/age_level_18_up"
+                tools:text="@string/age_level_18_up"
                 android:textSize="@dimen/movie_detail_text_size_age"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -76,7 +76,8 @@
                 android:layout_marginHorizontal="@dimen/margin_main"
                 android:layout_marginTop="@dimen/movie_detail_margin_title_to_top"
                 android:fontFamily="@font/roboto_medium"
-                android:text="@string/movie_title"
+                tools:text="@string/movie_title"
+                android:textStyle="bold"
                 android:textSize="@dimen/movie_detail_text_size_title_movie"
                 app:layout_constraintEnd_toStartOf="@+id/movie_age_level"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
@@ -86,7 +87,7 @@
                 android:id="@+id/movie_rating"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/movie_detail_height_rating"
-                app:rating="@integer/movie_rating_temp"
+                tools:rating="@integer/movie_rating_temp"
                 android:layout_marginStart="@dimen/margin_main"
                 android:layout_marginTop="@dimen/movie_detail_margin_rating_to_title"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
@@ -99,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_main"
                 android:layout_marginTop="@dimen/movie_detail_margin_description_to_rating"
-                android:text="@string/movie_description"
+                tools:text="@string/movie_description"
                 android:textSize="@dimen/movie_detail_text_size_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="2"
@@ -121,157 +122,25 @@
                 android:layout_marginStart="@dimen/margin_main"
                 android:layout_marginTop="@dimen/movie_detail_margin_actors_title_to_description"
                 android:fontFamily="@font/roboto_medium"
+                android:textStyle="bold"
                 android:text="@string/actors_title"
                 android:textSize="@dimen/movie_detail_text_size_actors_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/barrier" />
 
-            <HorizontalScrollView
-                android:id="@+id/actors_container"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cast_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/movie_detail_margin_actors_container_top"
                 android:overScrollMode="never"
                 android:scrollbars="none"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_marginTop="@dimen/movie_detail_margin_actors_container_top"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/actors_title">
+                app:layout_constraintTop_toBottomOf="@+id/actors_title" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/margin_main">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/movie_detail_padding_actor_card_end">
-
-                        <ImageView
-                            android:id="@+id/actor_photo_1"
-                            android:layout_width="@dimen/movie_detail_width_actor_image"
-                            android:layout_height="@dimen/movie_detail_height_actor_image"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/image_statham"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/movie_detail_margin_actors_card_name_top"
-                            android:text="@string/actor_statham"
-                            android:textSize="@dimen/movie_detail_text_size_actors_name"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/actor_photo_1" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/movie_detail_padding_actor_card_end">
-
-                        <ImageView
-                            android:id="@+id/actor_photo_2"
-                            android:layout_width="@dimen/movie_detail_width_actor_image"
-                            android:layout_height="@dimen/movie_detail_height_actor_image"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/image_mccallany"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/movie_detail_margin_actors_card_name_top"
-                            android:text="@string/actor_mccallany"
-                            android:textSize="@dimen/movie_detail_text_size_actors_name"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/actor_photo_2" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/actor_photo_3"
-                            android:layout_width="@dimen/movie_detail_width_actor_image"
-                            android:layout_height="@dimen/movie_detail_height_actor_image"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/image_hartnett"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/movie_detail_margin_actors_card_name_top"
-                            android:text="@string/actor_hartnett"
-                            android:textSize="@dimen/movie_detail_text_size_actors_name"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/actor_photo_3" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </LinearLayout>
-            </HorizontalScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <ImageView
-        android:id="@+id/button_nav_to_home"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/movie_detail_height_bnv"
-        android:background="@drawable/bgr_menu_temp"
-        android:scaleType="center"
-        android:src="@drawable/ic_home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_nav_to_profile"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/button_nav_to_profile"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/movie_detail_height_bnv"
-        android:background="@color/white"
-        android:scaleType="center"
-        android:src="@drawable/ic_profile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_nav_to_home" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:itemBackground="@drawable/bgr_menu"
-            app:itemIconSize="16dp"
-            app:itemIconTint="@color/black"
-            app:labelVisibilityMode="unlabeled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="parent"
-            app:menu="@menu/bottom_navigation_menu" /> -->
-
-    <!--
-        <ListView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:isScrollContainer="true"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/actors_title"
-            tools:listitem="@layout/list_item_actor" />
-    -->
-

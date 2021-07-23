@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_movie_height_poster_image"
         app:cardCornerRadius="@dimen/item_movie_corner_radius_poster"
+        app:cardElevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -26,8 +27,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/item_movie_text_size_movie_title"
+        android:textStyle="bold"
         android:layout_marginTop="@dimen/item_movie_margin_movie_title_top"
-        android:layout_marginStart="@dimen/item_movie_margin_movie_to_frame"
+        android:layout_marginHorizontal="@dimen/item_movie_margin_movie_to_frame"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/poster_view"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -38,8 +41,9 @@
         android:layout_marginTop="@dimen/item_movie_margin_movie_description_top"
         android:fontFamily="@font/roboto"
         android:textSize="@dimen/item_movie_text_size_movie_description"
-        android:layout_marginStart="@dimen/item_movie_margin_movie_to_frame"
+        android:layout_marginHorizontal="@dimen/item_movie_margin_movie_to_frame"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/movie_title" />
 
     <com.oelrun.teta.utils.RatingView

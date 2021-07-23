@@ -26,6 +26,6 @@ class MovieViewHolder(private val view: View) :
         val textAge = item.ageRestriction.toString() + '+'
         ageLevel.text = textAge
 
-        view.setOnClickListener { clickListener.onClick(item.title) }
+        view.setOnClickListener { clickListener.onClick(item) }
     }
 }

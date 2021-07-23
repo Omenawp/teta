@@ -78,8 +78,8 @@ class MoviesDiffCallback: DiffUtil.ItemCallback<DataItem>() {
     }
 }
 
-class MoviesListener(val clickListener: (title: String) -> Unit) {
-    fun onClick(title: String) = clickListener(title)
+class MoviesListener(val clickListener: (id: Int) -> Unit) {
+    fun onClick(item: MovieDto) = clickListener(item.id)
 }
 
 
