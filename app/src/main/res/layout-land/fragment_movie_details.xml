@@ -26,11 +26,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/image_poster"
                 app:layout_constraintEnd_toStartOf="@id/movie_description"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/image_poster" />
 
             <TextView
                 android:id="@+id/movie_genre_name"
@@ -39,21 +39,21 @@
                 android:layout_marginStart="@dimen/margin_main"
                 android:layout_marginTop="@dimen/margin_main"
                 android:background="@drawable/bgr_genre"
-                tools:text="@string/movie_genre_action"
                 android:textSize="@dimen/movie_detail_text_size_genre"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/movie_genre_action" />
 
             <TextView
                 android:id="@+id/movie_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/movie_detail_margin_data_start"
-                tools:text="@string/movie_data"
                 android:textSize="@dimen/movie_detail_text_size_data"
                 app:layout_constraintBottom_toBottomOf="@+id/movie_genre_name"
                 app:layout_constraintStart_toEndOf="@+id/movie_genre_name"
-                app:layout_constraintTop_toTopOf="@+id/movie_genre_name" />
+                app:layout_constraintTop_toTopOf="@+id/movie_genre_name"
+                tools:text="@string/movie_data" />
 
             <TextView
                 android:id="@+id/movie_age_level"
@@ -62,12 +62,12 @@
                 android:layout_marginTop="@dimen/movie_detail_margin_age_ic_to_top"
                 android:layout_marginEnd="@dimen/margin_main"
                 android:background="@drawable/bgr_circle"
-                android:textAlignment="center"
                 android:paddingVertical="@dimen/movie_detail_paddings_age_ic"
-                tools:text="@string/age_level_18_up"
+                android:textAlignment="center"
                 android:textSize="@dimen/movie_detail_text_size_age"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/age_level_18_up" />
 
             <TextView
                 android:id="@+id/movie_title"
@@ -76,23 +76,23 @@
                 android:layout_marginHorizontal="@dimen/margin_main"
                 android:layout_marginTop="@dimen/movie_detail_margin_title_to_top"
                 android:fontFamily="@font/roboto_medium"
-                tools:text="@string/movie_title"
-                android:textStyle="bold"
                 android:textSize="@dimen/movie_detail_text_size_title_movie"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/movie_age_level"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
-                app:layout_constraintTop_toBottomOf="@+id/movie_data" />
+                app:layout_constraintTop_toBottomOf="@+id/movie_data"
+                tools:text="@string/movie_title" />
 
             <com.oelrun.teta.utils.RatingView
                 android:id="@+id/movie_rating"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/movie_detail_height_rating"
-                tools:rating="@integer/movie_rating_temp"
                 android:layout_marginStart="@dimen/margin_main"
                 android:layout_marginTop="@dimen/movie_detail_margin_rating_to_title"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
                 app:layout_constraintTop_toBottomOf="@+id/movie_title"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                tools:rating="@integer/movie_rating_temp" />
 
             <TextView
                 android:id="@+id/movie_description"
@@ -100,12 +100,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_main"
                 android:layout_marginTop="@dimen/movie_detail_margin_description_to_rating"
-                tools:text="@string/movie_description"
                 android:textSize="@dimen/movie_detail_text_size_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="2"
                 app:layout_constraintStart_toEndOf="@id/image_poster"
-                app:layout_constraintTop_toBottomOf="@id/movie_rating" />
+                app:layout_constraintTop_toBottomOf="@id/movie_rating"
+                tools:text="@string/movie_description" />
 
             <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/barrier"
@@ -122,9 +122,9 @@
                 android:layout_marginStart="@dimen/margin_main"
                 android:layout_marginTop="@dimen/movie_detail_margin_actors_title_to_description"
                 android:fontFamily="@font/roboto_medium"
-                android:textStyle="bold"
                 android:text="@string/actors_title"
                 android:textSize="@dimen/movie_detail_text_size_actors_title"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/barrier" />
 
@@ -132,12 +132,24 @@
                 android:id="@+id/cast_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/movie_detail_margin_actors_container_top"
+                android:orientation="horizontal"
                 android:overScrollMode="never"
                 android:scrollbars="none"
-                android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_marginTop="@dimen/movie_detail_margin_actors_container_top"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/actors_title" />
+
+            <TextView
+                android:id="@+id/error_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/movie_detail_margin_actors_container_top"
+                android:text="@string/movie_detail_error_message_cast"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/actors_title" />
 
