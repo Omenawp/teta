@@ -34,7 +34,7 @@ class GenresAdapter: RecyclerView.Adapter<GenresAdapter.ViewHolder>() {
 
         fun bind(clickListener: (item: GenreDto) -> Unit, item: GenreDto) {
             view as TextView
-            view.text = item.name
+            view.text = item.name.lowercase()
             view.setBackgroundResource(
                 if(item.selected) R.drawable.bgr_genre_selected else R.drawable.bgr_genre
             )

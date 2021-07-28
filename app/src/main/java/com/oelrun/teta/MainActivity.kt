@@ -1,117 +1,64 @@
 package com.oelrun.teta
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
-import android.widget.TextView
-import android.widget.Toast
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.oelrun.teta.data.genre.GenreDto
-import com.oelrun.teta.data.genre.GenresDataSource
-import com.oelrun.teta.data.movie.MoviesDataSource
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.oelrun.teta.moviedetail.MovieDetailsFragment
 import com.oelrun.teta.movies.*
+import com.oelrun.teta.profile.ProfileFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
 
-    private var firstItemMovie = 0
-    private var firstItemGenre = 0
-    private lateinit var listMovies: RecyclerView
-    private lateinit var listGenres: RecyclerView
+    private lateinit var bottomNavMenu: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_movies)
-        listMovies = findViewById(R.id.list_movies)
+        setContentView(R.layout.activity_main)
 
-        if(savedInstanceState != null) {
-            val posForMovie = savedInstanceState.getInt(FIRST_VISIBLE_ITEM_MOVIE)
-            val posForGenre = savedInstanceState.getInt(FIRST_VISIBLE_ITEM_GENRE)
-            if(posForMovie != -1) {
-                firstItemMovie = posForMovie
-            }
-            if(posForMovie != -1) {
-                firstItemGenre = posForGenre
-            }
+        bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        if (savedInstanceState == null) {
+            bottomNavMenu.selectedItemId = R.id.to_home
+            navigationChange(MoviesFragment())
         }
 
-        val windowWidth = resources.displayMetrics.widthPixels
-        val space = windowWidth - resources.getDimension(R.dimen.margin_main)
-        val spanWidthMin = resources.getDimension(R.dimen.item_movie_width) +
-                resources.getDimension(R.dimen.margin_main)
-        val spanCount = (space / spanWidthMin).toInt()
-
-        val manager = GridLayoutManager(this, spanCount)
-        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when(position){
-                    0 -> spanCount
-                    else -> 1
+        bottomNavMenu.setOnNavigationItemSelectedListener {
+            if (it.itemId != bottomNavMenu.selectedItemId) {
+                if(it.itemId == R.id.to_profile){
+                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    navigationChange(ProfileFragment())
+                } else {
+                    navigationChange(MoviesFragment())
                 }
             }
+            true
         }
-        val adapterMovies = MoviesAdapter(MoviesListener { title ->
-            Toast.makeText(this, title, Toast.LENGTH_SHORT).show()
-        })
-        val moviesData = MoviesDataSource().getMovies()
-        val messageItem = findViewById<TextView>(R.id.error_message)
+    }
 
-        listMovies.layoutManager = manager
-        listMovies.adapter = adapterMovies
-        listMovies.addItemDecoration(MoviesItemDecoration(
-            windowWidth,
-            spanCount,
-            resources.getDimension(R.dimen.margin_main).toInt(),
-            resources.getDimension(R.dimen.item_movie_margin_bottom).toInt()))
+    private fun navigationChange(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
 
-        if(moviesData.isEmpty()) {
-            messageItem.visibility = View.VISIBLE
+    override fun onBackPressed() {
+        if(supportFragmentManager.fragments.size == 1 &&
+            bottomNavMenu.selectedItemId == R.id.to_profile) {
+            bottomNavMenu.selectedItemId = R.id.to_home
         } else {
-            messageItem.visibility = View.GONE
-            adapterMovies.addHeaderAndSubmitList(moviesData) {
-                Handler(Looper.getMainLooper()).post {
-                    listMovies.invalidateItemDecorations()
-                }
-            }
-            listMovies.smoothScrollToPosition(firstItemMovie)
+            super.onBackPressed()
         }
-
-        listGenres = findViewById(R.id.list_genres)
-
-        val data = GenresDataSource().getGenres()
-        val adapterGenres = GenresAdapter()
-        val onItemGenresClicked = { item: GenreDto ->
-            Toast.makeText(this, item.name, Toast.LENGTH_SHORT).show()
-            val i = data.indexOf(item)
-            data[i].selected = !item.selected
-            adapterGenres.notifyDataSetChanged()
-        }
-
-        adapterGenres.clickListener = onItemGenresClicked
-        adapterGenres.list = data
-        listGenres.adapter = adapterGenres
-        listGenres.addItemDecoration(GenresItemDecoration())
-        listGenres.smoothScrollToPosition(firstItemGenre)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val movieLM = listMovies.layoutManager as GridLayoutManager
-        firstItemMovie = movieLM.findFirstVisibleItemPosition()
-
-        val genreLM = listGenres.layoutManager as LinearLayoutManager
-        firstItemGenre = genreLM.findFirstVisibleItemPosition()
-
-        outState.putInt(FIRST_VISIBLE_ITEM_MOVIE, firstItemMovie)
-        outState.putInt(FIRST_VISIBLE_ITEM_GENRE, firstItemGenre)
+    override fun navigateToDetail(id: Int) {
+        val stack = supportFragmentManager.fragments
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, MovieDetailsFragment.newInstance(id))
+            .hide(stack[0])
+            .addToBackStack(null)
+            .commit()
     }
-
-    companion object {
-        private const val FIRST_VISIBLE_ITEM_MOVIE = "key_first_visible_item_movie"
-        private const val FIRST_VISIBLE_ITEM_GENRE = "key_first_visible_item_genre"
-    }
-
 }

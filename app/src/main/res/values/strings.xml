@@ -8,9 +8,28 @@
     <string name="movie_list_item_header_title">Down, down, to the rabbit hole!</string>
     <string name="movie_list_error_message">For now there aren\'t any movies</string>
     <string name="movies_all_title">Популярное сейчас</string>
+    <string name="movie_detail_error_message">An error occurred, please try again later</string>
+    <string name="movie_detail_error_message_cast">We haven\'t any idea about the cast</string>
+
+    <string name="profile_interests_title">Интересы</string>
+    <string name="profile_personal_data_title">Личные данные</string>
+    <string name="settings_title">Настройки</string>
+    <string name="settings_notifications">Уведомления и звуки</string>
+    <string name="settings_confident">Конфиденциальность</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_lang">Язык</string>
+    <string name="settings_memory">Данные памяти</string>
+    <string name="feedback_app_title">Приложение</string>
+    <string name="feedback_ask">Задать вопрос</string>
+    <string name="feedback_problem">Сообщить о проблеме</string>
+    <string name="profile_exit">Выйти</string>
+    <string name="profile_exit_message">Neverwhere</string>
+
+    <!-- hints -->
+    <string name="hint_phone">Телефон</string>
+    <string name="hint_name">Имя</string>
 
     <!-- movie temp -->
-
     <string name="movie_description">Эйч — загадочный и холодный на вид джентльмен, но внутри него пылает
         жажда справедливости. Преследуя свои мотивы, он внедряется в инкассаторскую компанию, чтобы
         выйти на соучастников серии многомиллионных ограблений, потрясших Лос-Анджелес. В этой
@@ -26,4 +45,9 @@
     <string name="actor_statham">Джейсон Стэйтем</string>
     <string name="actor_mccallany">Холт Маккэллани</string>
     <string name="actor_hartnett">Джош Харнетт</string>
+
+    <!-- profile temp -->
+    <string name="profile_user_name">Константин</string>
+    <string name="profile_user_email">konst.89@mail.com</string>
+    <string name="profile_user_password">1111111111</string>
 </resources>
