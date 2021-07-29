@@ -29,6 +29,11 @@ class MovieDetailsFragment : Fragment() {
         if(movie != null) {
             val ageLevel = "${movie.ageRestriction}+"
 
+            //val cornerRadius = resources.getDimension(R.dimen.movie_detail_corner_radius_poster)
+            /*{transformations(RoundedCornersTransformation(
+                    topLeft = cornerRadius,
+                    topRight = cornerRadius))}*/
+
             view.findViewById<ImageView>(R.id.image_poster).load(movie.imageUrl)
             view.findViewById<TextView>(R.id.movie_genre_name).text = movie.genre[0].name.lowercase()
             view.findViewById<TextView>(R.id.movie_data).text = movie.releaseDate
