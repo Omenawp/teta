@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.oelrun.teta.R
 import com.oelrun.teta.data.genre.GenreDto
-import com.oelrun.teta.data.genre.GenresDataSource
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -113,22 +112,28 @@ class MoviesFragment: Fragment() {
         }
 
         listGenres = view.findViewById(R.id.list_genres)
-
-        val data = GenresDataSource().getGenres()
         val adapterGenres = GenresAdapter()
         val onItemGenresClicked = { item: GenreDto ->
             Toast.makeText(this.context, item.name, Toast.LENGTH_SHORT).show()
-            val i = data.indexOf(item)
-            data[i].selected = !item.selected
+            moviesViewModel.genreChangeSelection(item)
             adapterGenres.notifyDataSetChanged()
         }
         adapterGenres.clickListener = onItemGenresClicked
-
         listGenres.adapter = adapterGenres
-        adapterGenres.list = data
         listGenres.addItemDecoration(GenresItemDecoration())
-        if(firstItemGenre != -1) {
-            listGenres.smoothScrollToPosition(firstItemGenre)
+
+        lifecycleScope.launch {
+            moviesViewModel.genresData.collect { data ->
+                if (data.isNotEmpty()) {
+                    adapterGenres.list = data
+                    Handler(Looper.getMainLooper()).post {
+                        if (firstItemGenre != -1) {
+                            listGenres.smoothScrollToPosition(firstItemGenre)
+                        }
+                        listGenres.invalidateItemDecorations()
+                    }
+                }
+            }
         }
 
         return view
