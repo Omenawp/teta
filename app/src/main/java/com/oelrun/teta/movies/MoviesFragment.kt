@@ -78,6 +78,7 @@ class MoviesFragment: Fragment() {
 
         lifecycleScope.launch {
             moviesViewModel.moviesData.collect { data ->
+                data ?: return@collect
                 if(data.isEmpty()) {
                     messageItem.visibility = View.VISIBLE
                 } else {
@@ -96,15 +97,13 @@ class MoviesFragment: Fragment() {
 
         lifecycleScope.launch {
             moviesViewModel.isRefreshing.collect {
-                if(!it) {
-                    swipeContainer.isRefreshing = false
-                }
+                swipeContainer.isRefreshing = it
             }
         }
 
         lifecycleScope.launch {
-            moviesViewModel.errorMessage.collect {
-                if(it != null) {
+            moviesViewModel.errorMessage.collect { message ->
+                message?.let {
                     Toast.makeText(view.context, it, Toast.LENGTH_SHORT).show()
                     moviesViewModel.errorMessageShown()
                 }

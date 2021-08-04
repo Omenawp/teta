@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MoviesViewModel: ViewModel() {
-    private val _moviesData = MutableStateFlow<List<MovieDto>>(emptyList())
-    val moviesData: StateFlow<List<MovieDto>> = _moviesData
+    private val _moviesData = MutableStateFlow<List<MovieDto>?>(null)
+    val moviesData: StateFlow<List<MovieDto>?> = _moviesData
 
     private val _genresData = MutableStateFlow<List<GenreDto>>(emptyList())
     val genresData: StateFlow<List<GenreDto>> = _genresData
@@ -36,12 +36,9 @@ class MoviesViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val data = withContext(Dispatchers.IO) {
-                    Thread.sleep(2000)
                     MoviesDataSource().getMovies(refresh)
                 }
-                if (data.isNotEmpty()) {
-                    _moviesData.value = data
-                }
+                _moviesData.value = data
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
@@ -53,7 +50,6 @@ class MoviesViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val data = withContext(Dispatchers.IO) {
-                    Thread.sleep(2000)
                     GenresDataSource().getGenres()
                 }
                 if (data.isNotEmpty()) {
