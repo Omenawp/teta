@@ -10,9 +10,8 @@
         android:id="@+id/image_poster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bgr_poster"
+        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/image_poster"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +26,9 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bgr_card"
+            android:overScrollMode="never"
             android:scrollbars="none"
             app:behavior_hideable="false"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -35,7 +36,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/about_movie"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/bgr_card"
                 android:paddingBottom="@dimen/movie_detail_margin_main_to_bottom">
 

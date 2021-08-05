@@ -12,9 +12,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.ChipGroup
 import com.oelrun.teta.R
 import com.oelrun.teta.data.genre.GenresDataSource
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class ProfileFragment: Fragment() {
 
@@ -24,8 +28,8 @@ class ProfileFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+        val profileViewModel: ProfileViewModel by viewModels()
 
-        makeFavItems(view)
         val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         val editorActionListener = TextView.OnEditorActionListener { textView, i, keyEvent ->
@@ -44,6 +48,23 @@ class ProfileFragment: Fragment() {
         view.findViewById<AppCompatButton>(R.id.btn_exit).setOnClickListener {
             Toast.makeText(this.context, resources.getString(R.string.profile_exit_message),
                 Toast.LENGTH_SHORT).show()
+        }
+
+        lifecycleScope.launch {
+            profileViewModel.favGenres.collect { data ->
+                data?.let {
+                    makeFavItems(view)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            profileViewModel.errorMessage.collect { message ->
+                message?.let {
+                    Toast.makeText(view.context, it, Toast.LENGTH_SHORT).show()
+                    profileViewModel.errorMessageShown()
+                }
+            }
         }
 
         return view

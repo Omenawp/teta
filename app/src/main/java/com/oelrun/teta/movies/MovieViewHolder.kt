@@ -25,7 +25,6 @@ class MovieViewHolder(private val view: View) :
         posterImage.load(item.imageUrl)
         val textAge = item.ageRestriction.toString() + '+'
         ageLevel.text = textAge
-
         view.setOnClickListener { clickListener.onClick(item) }
     }
 }
