@@ -1,7 +1,7 @@
 package com.oelrun.teta.data.genre
 
 class GenresDataSource {
-    fun getGenres() = listOf(
+    private val dataGenres = listOf(
         GenreDto(1, "Боевик"),
         GenreDto(2, "Вестерн"),
         GenreDto(3, "Военный"),
@@ -20,4 +20,9 @@ class GenresDataSource {
         GenreDto(16, "Триллер"),
         GenreDto(17, "Ужасы"),
         GenreDto(18, "Фэнтези"))
+
+    fun getGenres(): List<GenreDto> {
+        Thread.sleep(1000)
+        return dataGenres
+    }
 }

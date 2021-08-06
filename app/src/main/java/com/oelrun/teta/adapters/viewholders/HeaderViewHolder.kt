@@ -1,4 +1,4 @@
-package com.oelrun.teta.movies
+package com.oelrun.teta.adapters.viewholders
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

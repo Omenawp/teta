@@ -1,6 +1,7 @@
-package com.oelrun.teta.moviedetail
+package com.oelrun.teta.screens.moviedetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.oelrun.teta.R
-import com.oelrun.teta.data.movie.MoviesDataSource
+import com.oelrun.teta.adapters.CastAdapter
+import com.oelrun.teta.adapters.decorators.CastItemDecorator
+import com.oelrun.teta.data.movie.MovieDto
 import com.oelrun.teta.utils.RatingView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class MovieDetailsFragment : Fragment() {
 
@@ -22,11 +28,36 @@ class MovieDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
+        val movieId = MovieDetailsFragmentArgs.fromBundle(requireArguments()).idMovie
 
-        val movieId = arguments?.getInt(CURRENT_ITEM)
-        val movie = MoviesDataSource().getMovieById(movieId)
+        val detailsViewModel = MovieDetailsViewModel()
+        detailsViewModel.loadDetails(movieId)
 
-        if(movie != null) {
+        lifecycleScope.launch {
+            detailsViewModel.movieDetails.collect { details ->
+                details?.let {
+                    showDetails(details)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            detailsViewModel.errorMessage.collect { message ->
+                message?.let {
+                    Toast.makeText(
+                        context,
+                        resources.getString(R.string.movie_detail_error_message), Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+
+
+        return view
+    }
+
+    private fun showDetails(movie: MovieDto) {
+        view?.let { view ->
             val ageLevel = "${movie.ageRestriction}+"
 
             //val cornerRadius = resources.getDimension(R.dimen.movie_detail_corner_radius_poster)
@@ -39,7 +70,14 @@ class MovieDetailsFragment : Fragment() {
             view.findViewById<TextView>(R.id.movie_data).text = movie.releaseDate
             view.findViewById<TextView>(R.id.movie_age_level).text = ageLevel
             view.findViewById<TextView>(R.id.movie_title).text = movie.title
-            view.findViewById<RatingView>(R.id.movie_rating).rating = movie.rateScore
+            //view.findViewById<RatingView>(R.id.movie_rating).rating = movie.rateScore
+
+            val rateView = view.findViewById<RatingView>(R.id.movie_rating)
+            rateView.apply {
+                this.rating = movie.rateScore
+                invalidate()
+            }
+
             view.findViewById<TextView>(R.id.movie_description).text = movie.description
 
             val errorMessage = view.findViewById<TextView>(R.id.error_message)
@@ -54,25 +92,6 @@ class MovieDetailsFragment : Fragment() {
             } else {
                 errorMessage.visibility = View.VISIBLE
             }
-
-        } else {
-            Toast.makeText(this.context,
-                resources.getString(R.string.movie_detail_error_message), Toast.LENGTH_LONG).show()
-            parentFragmentManager.popBackStack()
-        }
-
-        return view
-    }
-
-    companion object {
-        private const val CURRENT_ITEM = "key_current_item_id"
-
-        fun newInstance(id: Int): MovieDetailsFragment {
-            val args = Bundle()
-            args.putInt(CURRENT_ITEM, id)
-            val fragment = MovieDetailsFragment()
-            fragment.arguments = args
-            return fragment
         }
     }
 }

@@ -1,11 +1,11 @@
-package com.oelrun.teta.movies
+package com.oelrun.teta.adapters.decorators
 
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.R
 
-class GenresItemDecoration: RecyclerView.ItemDecoration() {
+class CastItemDecorator: RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -16,15 +16,15 @@ class GenresItemDecoration: RecyclerView.ItemDecoration() {
 
         if (pos == 0) {
             outRect.left =
-                parent.context.resources.getDimension(R.dimen.item_genre_margin_border).toInt()
+                parent.context.resources.getDimension(R.dimen.cast_item_margin_border).toInt()
         }
 
         if (pos == state.itemCount - 1) {
             outRect.right =
-                parent.context.resources.getDimension(R.dimen.item_genre_margin_border).toInt()
+                parent.context.resources.getDimension(R.dimen.cast_item_margin_border).toInt()
         } else {
             outRect.right =
-                parent.context.resources.getDimension(R.dimen.item_genre_margin_main).toInt()
+                parent.context.resources.getDimension(R.dimen.cast_item_margin).toInt()
         }
     }
 }

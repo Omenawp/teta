@@ -1,4 +1,4 @@
-package com.oelrun.teta.profile
+package com.oelrun.teta.screens.profile
 
 import android.content.Context
 import android.os.Bundle
@@ -28,7 +28,7 @@ class ProfileFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        val profileViewModel: ProfileViewModel by viewModels()
+        val profileViewModel = ProfileViewModel()
 
         val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 

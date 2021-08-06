@@ -1,4 +1,4 @@
-package com.oelrun.teta.movies
+package com.oelrun.teta.adapters.viewholders
 
 import android.view.View
 import android.widget.ImageView
@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.oelrun.teta.R
+import com.oelrun.teta.adapters.MoviesListener
 import com.oelrun.teta.data.movie.MovieDto
 import com.oelrun.teta.utils.RatingView
 

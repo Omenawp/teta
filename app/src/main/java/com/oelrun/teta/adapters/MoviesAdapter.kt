@@ -1,4 +1,4 @@
-package com.oelrun.teta.movies
+package com.oelrun.teta.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.R
+import com.oelrun.teta.adapters.viewholders.HeaderViewHolder
+import com.oelrun.teta.adapters.viewholders.MovieViewHolder
 import com.oelrun.teta.data.movie.MovieDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.oelrun.teta.moviedetail
+package com.oelrun.teta.adapters
 
 import android.view.LayoutInflater
 import android.view.View

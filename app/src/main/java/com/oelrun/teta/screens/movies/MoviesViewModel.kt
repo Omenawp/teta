@@ -1,4 +1,4 @@
-package com.oelrun.teta.movies
+package com.oelrun.teta.screens.movies
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import com.oelrun.teta.data.genre.GenreDto
 import com.oelrun.teta.data.genre.GenresDataSource
 import com.oelrun.teta.data.movie.MovieDto
 import com.oelrun.teta.data.movie.MoviesDataSource
+import com.oelrun.teta.network.MovieApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,8 @@ class MoviesViewModel: ViewModel() {
     private var _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
+    var firstItemMovie = -1
+
     init {
         loadGenres()
         loadMovies(false)
@@ -36,7 +39,7 @@ class MoviesViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val data = withContext(Dispatchers.IO) {
-                    MoviesDataSource().getMovies(refresh)
+                    MovieApi.repository.getMovies(refresh)
                 }
                 _moviesData.value = data
             } catch (e: Exception) {
@@ -50,7 +53,7 @@ class MoviesViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val data = withContext(Dispatchers.IO) {
-                    GenresDataSource().getGenres()
+                    MovieApi.repository.getGenres()
                 }
                 if (data.isNotEmpty()) {
                     _genresData.value = data

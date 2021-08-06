@@ -1,4 +1,4 @@
-package com.oelrun.teta.movies
+package com.oelrun.teta.adapters.decorators
 
 import android.graphics.Rect
 import android.view.View

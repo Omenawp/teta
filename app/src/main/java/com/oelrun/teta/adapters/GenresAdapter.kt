@@ -1,4 +1,4 @@
-package com.oelrun.teta.movies
+package com.oelrun.teta.adapters
 
 import android.graphics.Color
 import android.view.LayoutInflater
