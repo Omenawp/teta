@@ -1,6 +1,6 @@
 package com.oelrun.teta.adapters.viewholders
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.oelrun.teta.databinding.ListItemMovieHeaderBinding
 
-class HeaderViewHolder(view: View): RecyclerView.ViewHolder(view)
+class HeaderViewHolder(binding: ListItemMovieHeaderBinding): RecyclerView.ViewHolder(binding.root)

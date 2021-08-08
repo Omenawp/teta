@@ -1,32 +1,33 @@
 package com.oelrun.teta.screens.movies
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.GridLayoutManager
 import com.oelrun.teta.data.genre.GenreDto
-import com.oelrun.teta.data.genre.GenresDataSource
 import com.oelrun.teta.data.movie.MovieDto
-import com.oelrun.teta.data.movie.MoviesDataSource
 import com.oelrun.teta.network.MovieApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MoviesViewModel: ViewModel() {
-    private val _moviesData = MutableStateFlow<List<MovieDto>?>(null)
-    val moviesData: StateFlow<List<MovieDto>?> = _moviesData
+    private val _moviesData = MutableLiveData<List<MovieDto>>()
+    val moviesData: LiveData<List<MovieDto>> = _moviesData
 
-    private val _genresData = MutableStateFlow<List<GenreDto>>(emptyList())
-    val genresData: StateFlow<List<GenreDto>> = _genresData
+    private val _genresData = MutableLiveData<List<GenreDto>>()
+    val genresData: LiveData<List<GenreDto>> = _genresData
 
-    private var _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> = _isRefreshing
+    private var _isRefreshing = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private var _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
+    private var _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?> = _errorMessage
 
-    var firstItemMovie = -1
+    private var _firstItemMovie = -1
+    val firstItemMovie
+        get() = _firstItemMovie
 
     init {
         loadGenres()
@@ -35,6 +36,7 @@ class MoviesViewModel: ViewModel() {
 
     fun loadMovies(refresh: Boolean) {
         _isRefreshing.value = true
+        _firstItemMovie = -1
 
         viewModelScope.launch {
             try {
@@ -65,11 +67,21 @@ class MoviesViewModel: ViewModel() {
     }
 
     fun genreChangeSelection(item: GenreDto) {
-        val i = _genresData.value.indexOf(item)
-        _genresData.value[i].selected = !item.selected
+        _genresData.value?.let { genres ->
+            val i = genres.indexOf(item)
+            genres[i].selected = !item.selected
+        }
     }
 
     fun errorMessageShown() {
         _errorMessage.value = null
+    }
+
+    fun savePosition(lm: GridLayoutManager) {
+        var pos = lm.findFirstCompletelyVisibleItemPosition()
+        if(pos == -1) {
+            pos = lm.findFirstVisibleItemPosition()
+        }
+        _firstItemMovie = pos
     }
 }

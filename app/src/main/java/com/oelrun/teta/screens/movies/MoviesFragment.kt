@@ -7,14 +7,10 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.oelrun.teta.R
 import com.oelrun.teta.adapters.GenresAdapter
 import com.oelrun.teta.adapters.MoviesAdapter
@@ -22,16 +18,14 @@ import com.oelrun.teta.adapters.MoviesListener
 import com.oelrun.teta.adapters.decorators.GenresItemDecoration
 import com.oelrun.teta.adapters.decorators.MoviesItemDecoration
 import com.oelrun.teta.data.genre.GenreDto
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import com.oelrun.teta.databinding.FragmentMoviesBinding
 
 class MoviesFragment: Fragment() {
 
-    private lateinit var listMovies: RecyclerView
-    private lateinit var listGenres: RecyclerView
+    private var _binding: FragmentMoviesBinding? = null
+    private val binding get() = _binding!!
     private lateinit var adapterGenres: GenresAdapter
     private lateinit var adapterMovies: MoviesAdapter
-    private lateinit var swipeContainer: SwipeRefreshLayout
     private var moviesFragmentClickListener: MoviesFragmentClickListener? = null
     private val moviesViewModel: MoviesViewModel by viewModels()
 
@@ -39,66 +33,54 @@ class MoviesFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_movies, container, false)
-        swipeContainer = view.findViewById<SwipeRefreshLayout>(R.id.swipe_container_movies)
-        val messageItem = view.findViewById<TextView>(R.id.error_message)
-        listMovies = view.findViewById(R.id.list_movies)
-        listGenres = view.findViewById(R.id.list_genres)
+    ): View {
+        _binding = FragmentMoviesBinding.inflate(inflater, container, false)
 
         setupMoviesAdapter()
         setupGenresAdapter()
 
-        swipeContainer.setOnRefreshListener {
+        binding.swipeContainerMovies.setOnRefreshListener {
             moviesViewModel.loadMovies(true)
         }
 
-        lifecycleScope.launch {
-            moviesViewModel.isRefreshing.collect {
-                swipeContainer.isRefreshing = it
-            }
-        }
+        moviesViewModel.isRefreshing.observe(viewLifecycleOwner, {
+            binding.swipeContainerMovies.isRefreshing = it
+        })
 
-        lifecycleScope.launch {
-            moviesViewModel.moviesData.collect { data ->
-                data ?: return@collect
-                if(data.isEmpty()) {
-                    messageItem.visibility = View.VISIBLE
-                } else {
-                    messageItem.visibility = View.GONE
-                    adapterMovies.addHeaderAndSubmitList(data) {
-                        Handler(Looper.getMainLooper()).post {
-                            listMovies.invalidateItemDecorations()
-                        }
+        moviesViewModel.moviesData.observe(viewLifecycleOwner, { data ->
+            if(data.isEmpty()) {
+                binding.errorMessage.visibility = View.VISIBLE
+            } else {
+                binding.errorMessage.visibility = View.GONE
+                adapterMovies.addHeaderAndSubmitList(data) {
+                    Handler(Looper.getMainLooper()).post {
+                        binding.listMovies.invalidateItemDecorations()
                     }
                     if(moviesViewModel.firstItemMovie != -1) {
-                        listMovies.smoothScrollToPosition(moviesViewModel.firstItemMovie)
+                        binding.listMovies.smoothScrollToPosition(moviesViewModel.firstItemMovie)
                     }
                 }
             }
-        }
+        })
 
-        lifecycleScope.launch {
-            moviesViewModel.errorMessage.collect { message ->
-                message?.let {
-                    Toast.makeText(view.context, it, Toast.LENGTH_SHORT).show()
-                    moviesViewModel.errorMessageShown()
+        moviesViewModel.errorMessage.observe(viewLifecycleOwner, { message ->
+            message?.let {
+                binding.errorMessage.visibility = View.VISIBLE
+                Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+                moviesViewModel.errorMessageShown()
+            }
+        })
+
+        moviesViewModel.genresData.observe(viewLifecycleOwner, { data ->
+            if(data.isNotEmpty()) {
+                adapterGenres.list = data
+                Handler(Looper.getMainLooper()).post {
+                    binding.listGenres.invalidateItemDecorations()
                 }
             }
-        }
+        })
 
-        lifecycleScope.launch {
-            moviesViewModel.genresData.collect { data ->
-                if (data.isNotEmpty()) {
-                    adapterGenres.list = data
-                    Handler(Looper.getMainLooper()).post {
-                        listGenres.invalidateItemDecorations()
-                    }
-                }
-            }
-        }
-
-        return view
+        return binding.root
     }
 
     private fun setupGenresAdapter() {
@@ -109,8 +91,8 @@ class MoviesFragment: Fragment() {
             adapterGenres.notifyDataSetChanged()
         }
         adapterGenres.clickListener = onItemGenresClicked
-        listGenres.adapter = adapterGenres
-        listGenres.addItemDecoration(GenresItemDecoration())
+        binding.listGenres.adapter = adapterGenres
+        binding.listGenres.addItemDecoration(GenresItemDecoration())
     }
 
     private fun setupMoviesAdapter() {
@@ -119,6 +101,10 @@ class MoviesFragment: Fragment() {
         val spanWidthMin = resources.getDimension(R.dimen.item_movie_width) +
                 resources.getDimension(R.dimen.margin_main)
         val spanCount = (space / spanWidthMin).toInt()
+
+        val occupiedWidth = windowWidth - resources.getDimension(R.dimen.item_movie_width) *
+                spanCount - resources.getDimension(R.dimen.margin_main) * 2
+        val itemOffset = occupiedWidth / (spanCount - 1) / 2
 
         val manager = GridLayoutManager(this.context, spanCount)
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -134,12 +120,12 @@ class MoviesFragment: Fragment() {
             moviesFragmentClickListener?.navigateToDetail(id)
         })
 
-        listMovies.layoutManager = manager
-        listMovies.adapter = adapterMovies
-        listMovies.addItemDecoration(
+        binding.listMovies.layoutManager = manager
+        binding.listMovies.adapter = adapterMovies
+        binding.listMovies.addItemDecoration(
             MoviesItemDecoration(
-                windowWidth,
                 spanCount,
+                itemOffset.toInt(),
                 resources.getDimension(R.dimen.margin_main).toInt(),
                 resources.getDimension(R.dimen.item_movie_margin_bottom).toInt())
         )
@@ -153,19 +139,18 @@ class MoviesFragment: Fragment() {
     }
 
     override fun onPause() {
-        val movieLM = listMovies.layoutManager as GridLayoutManager
-        var firstItemMovie = movieLM.findFirstCompletelyVisibleItemPosition()
-        if(firstItemMovie == -1) {
-            firstItemMovie = movieLM.findFirstVisibleItemPosition()
-        }
-        moviesViewModel.firstItemMovie = firstItemMovie
-        swipeContainer.isRefreshing = false
+        moviesViewModel.savePosition(binding.listMovies.layoutManager as GridLayoutManager)
         super.onPause()
     }
 
     override fun onDetach() {
         super.onDetach()
         moviesFragmentClickListener = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
 

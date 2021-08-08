@@ -1,21 +1,19 @@
 package com.oelrun.teta.screens.profile
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.oelrun.teta.data.genre.GenreDto
 import com.oelrun.teta.network.MovieApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ProfileViewModel: ViewModel() {
-    private val _favGenres = MutableStateFlow<List<GenreDto>?>(null)
-    val favGenres: StateFlow<List<GenreDto>?> = _favGenres
 
-    private var _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
+    private val _favGenres = MutableLiveData<List<GenreDto>>()
+    val favGenres: LiveData<List<GenreDto>> = _favGenres
+
+    private var _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?> = _errorMessage
 
     init {
         loadFavGenres()
@@ -27,9 +25,7 @@ class ProfileViewModel: ViewModel() {
                 val data = withContext(Dispatchers.IO) {
                     MovieApi.repository.getGenres()
                 }
-                if (data.isNotEmpty()) {
-                    _favGenres.value = data
-                }
+                _favGenres.value = data
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }

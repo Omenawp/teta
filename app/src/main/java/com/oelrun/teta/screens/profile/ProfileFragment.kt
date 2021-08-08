@@ -7,32 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.google.android.material.chip.ChipGroup
 import com.oelrun.teta.R
-import com.oelrun.teta.data.genre.GenresDataSource
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import com.oelrun.teta.data.genre.GenreDto
+import com.oelrun.teta.databinding.FragmentProfileBinding
+import com.oelrun.teta.databinding.ListItemGenreBinding
 
 class ProfileFragment: Fragment() {
+
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        val profileViewModel = ProfileViewModel()
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-        val editorActionListener = TextView.OnEditorActionListener { textView, i, keyEvent ->
+        val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val editorActionListener = TextView.OnEditorActionListener { textView, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE) {
                 textView.clearFocus()
                 imm.hideSoftInputFromWindow(textView.windowToken, 0)
@@ -40,51 +38,54 @@ class ProfileFragment: Fragment() {
             true
         }
 
-        view.findViewById<EditText>(R.id.user_name).setOnEditorActionListener(editorActionListener)
-        view.findViewById<EditText>(R.id.user_password).setOnEditorActionListener(editorActionListener)
-        view.findViewById<EditText>(R.id.user_email).setOnEditorActionListener(editorActionListener)
-        view.findViewById<EditText>(R.id.user_phone).setOnEditorActionListener(editorActionListener)
+        binding.userName.setOnEditorActionListener(editorActionListener)
+        binding.userPassword.setOnEditorActionListener(editorActionListener)
+        binding.userEmail.setOnEditorActionListener(editorActionListener)
+        binding.userPhone.setOnEditorActionListener(editorActionListener)
 
-        view.findViewById<AppCompatButton>(R.id.btn_exit).setOnClickListener {
-            Toast.makeText(this.context, resources.getString(R.string.profile_exit_message),
-                Toast.LENGTH_SHORT).show()
+        binding.btnExit.setOnClickListener {
+            Toast.makeText(context, resources.getString(R.string.profile_exit_message), Toast.LENGTH_SHORT).show()
         }
 
-        lifecycleScope.launch {
-            profileViewModel.favGenres.collect { data ->
-                data?.let {
-                    makeFavItems(view)
-                }
+        profileViewModel.favGenres.observe(viewLifecycleOwner, { data ->
+            data?.let {
+                binding.profileMainContainer.visibility = View.VISIBLE
+                makeFavItems(data)
             }
-        }
+            binding.loadingImage.visibility = View.GONE
+        })
 
-        lifecycleScope.launch {
-            profileViewModel.errorMessage.collect { message ->
-                message?.let {
-                    Toast.makeText(view.context, it, Toast.LENGTH_SHORT).show()
-                    profileViewModel.errorMessageShown()
-                }
+        profileViewModel.errorMessage.observe(viewLifecycleOwner, { message ->
+            message?.let {
+                binding.profileMainContainer.visibility = View.GONE
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                profileViewModel.errorMessageShown()
             }
-        }
+        })
 
-        return view
+        return binding.root
     }
 
-    private fun makeFavItems(view: View) {
-        val data = GenresDataSource().getGenres()
-        val group = view.findViewById<ChipGroup>(R.id.list_interests)
+    private fun makeFavItems(data: List<GenreDto>) {
+        val group = binding.listInterests
         val inflater = LayoutInflater.from(group.context)
 
         val children = data.map{
-            val chip = inflater.inflate(R.layout.list_item_genre, group, false) as TextView
-            chip.text = it.name.lowercase()
-            chip.tag = it.id
-            chip
+            val genreBinding = ListItemGenreBinding.inflate(inflater, group, false)
+            val view = genreBinding.root
+            view.text = it.name.lowercase()
+            view.tag = it.id
+            view
         }
 
         group.removeAllViews()
         for(chip in children) {
             group.addView(chip)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

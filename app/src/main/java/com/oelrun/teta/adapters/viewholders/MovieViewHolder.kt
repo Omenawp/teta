@@ -1,31 +1,24 @@
 package com.oelrun.teta.adapters.viewholders
 
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.oelrun.teta.R
 import com.oelrun.teta.adapters.MoviesListener
 import com.oelrun.teta.data.movie.MovieDto
-import com.oelrun.teta.utils.RatingView
+import com.oelrun.teta.databinding.ListItemMovieBinding
 
-class MovieViewHolder(private val view: View) :
-    RecyclerView.ViewHolder(view) {
-
-    private val title: TextView = view.findViewById(R.id.movie_title)
-    private val description: TextView = view.findViewById(R.id.movie_description)
-    private val rating: RatingView = view.findViewById(R.id.rating_view)
-    private val ageLevel: TextView = view.findViewById(R.id.age_level)
-    private val posterImage: ImageView = view.findViewById(R.id.poster_image)
+class MovieViewHolder(private val binding: ListItemMovieBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(clickListener: MoviesListener, item: MovieDto) {
-        title.text = item.title
-        description.text = item.description
-        rating.rating = item.rateScore
-        posterImage.load(item.imageUrl)
+        binding.movieTitle.text = item.title
+        binding.movieDescription.text = item.description
+        binding.ratingView.rating = item.rateScore
+        binding.posterImage.load(item.imageUrl)
         val textAge = item.ageRestriction.toString() + '+'
-        ageLevel.text = textAge
-        view.setOnClickListener { clickListener.onClick(item) }
+        binding.ageLevel.text = textAge
+
+        binding.root.setOnClickListener {
+            clickListener.onClick(item)
+        }
     }
 }

@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavMenu = findViewById(R.id.bottom_navigation)
         navController = this.findNavController(R.id.nav_host_fragment)
         bottomNavMenu.setupWithNavController(navController)
 
