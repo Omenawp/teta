@@ -2,8 +2,6 @@ package com.oelrun.teta.screens.movies
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,10 +51,10 @@ class MoviesFragment: Fragment() {
             } else {
                 binding.errorMessage.visibility = View.GONE
                 adapterMovies.addHeaderAndSubmitList(data) {
-                    Handler(Looper.getMainLooper()).post {
+                    binding.listMovies.post {
                         binding.listMovies.invalidateItemDecorations()
                     }
-                    if(moviesViewModel.firstItemMovie != -1) {
+                    if (moviesViewModel.firstItemMovie != -1) {
                         binding.listMovies.smoothScrollToPosition(moviesViewModel.firstItemMovie)
                     }
                 }
@@ -74,7 +72,7 @@ class MoviesFragment: Fragment() {
         moviesViewModel.genresData.observe(viewLifecycleOwner, { data ->
             if(data.isNotEmpty()) {
                 adapterGenres.list = data
-                Handler(Looper.getMainLooper()).post {
+                binding.listGenres.post {
                     binding.listGenres.invalidateItemDecorations()
                 }
             }
