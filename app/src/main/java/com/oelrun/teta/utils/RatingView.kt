@@ -11,6 +11,8 @@ import com.oelrun.teta.R
 class RatingView@JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
+    private var filled = ContextCompat.getDrawable(context, R.drawable.ic_star_filled)
+    private var empty = ContextCompat.getDrawable(context, R.drawable.ic_star_blank)
     var rating = 0
 
     init {
@@ -20,9 +22,6 @@ class RatingView@JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        val filled = ContextCompat.getDrawable(context, R.drawable.ic_star_filled)
-        val empty = ContextCompat.getDrawable(context, R.drawable.ic_star_blank)
-
         for(i in 1..5) {
             val w = height * (i - 1)
             val pic = if(rating >= i) filled else empty

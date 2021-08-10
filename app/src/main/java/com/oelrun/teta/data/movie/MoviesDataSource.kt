@@ -434,10 +434,11 @@ class MoviesDataSource {
 
     //"refreshed"
     fun getMovies(refresh: Boolean): List<MovieDto> {
-        Thread.sleep(2000)
+        Thread.sleep(1000)
         return if(refresh) data.takeLast(8) else data.take(8)
     }
     fun getMovieById(id: Int?): MovieDto? {
+        Thread.sleep(1000)
         val item = data.filter { it.id == id }
         return if (item.isNotEmpty()) item[0] else null
     }

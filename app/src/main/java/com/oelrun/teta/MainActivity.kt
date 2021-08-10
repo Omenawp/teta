@@ -1,64 +1,60 @@
 package com.oelrun.teta
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.oelrun.teta.moviedetail.MovieDetailsFragment
-import com.oelrun.teta.movies.*
-import com.oelrun.teta.profile.ProfileFragment
+import com.oelrun.teta.screens.movies.*
 
 class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
 
     private lateinit var bottomNavMenu: BottomNavigationView
+    private lateinit var navController: NavController
+    //private var onHomeClicked = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavMenu = findViewById(R.id.bottom_navigation)
+        navController = this.findNavController(R.id.nav_host_fragment)
+        bottomNavMenu.setupWithNavController(navController)
 
-        if (savedInstanceState == null) {
-            bottomNavMenu.selectedItemId = R.id.to_home
-            navigationChange(MoviesFragment())
+        bottomNavMenu.setOnItemReselectedListener {
+            if(it.itemId == R.id.moviesFragment && navController.backQueue.size > 2) {
+                navController.popBackStack()
+            }
         }
 
-        bottomNavMenu.setOnNavigationItemSelectedListener {
-            if (it.itemId != bottomNavMenu.selectedItemId) {
-                if(it.itemId == R.id.to_profile){
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    navigationChange(ProfileFragment())
-                } else {
-                    navigationChange(MoviesFragment())
+        // if we need to skip the detailFragment when we return from the profile through "home" btn
+        /*bottomNavMenu.setOnItemSelectedListener {
+            if(it.itemId == R.id.moviesFragment && navController.backQueue.size > 2) {
+                navController.popBackStack()
+                if(onHomeClicked && navController.backQueue.size > 2) {
+                    navController.navigate(R.id.moviesFragment, null)
                 }
             }
+            if(it.itemId == R.id.profileFragment) {
+                navController.navigate(R.id.profileFragment)
+            }
+            onHomeClicked = true
             true
-        }
-    }
-
-    private fun navigationChange(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+        }*/
     }
 
     override fun onBackPressed() {
-        if(supportFragmentManager.fragments.size == 1 &&
-            bottomNavMenu.selectedItemId == R.id.to_profile) {
-            bottomNavMenu.selectedItemId = R.id.to_home
+        if(bottomNavMenu.selectedItemId == R.id.profileFragment) {
+            //onHomeClicked = false
+            bottomNavMenu.selectedItemId = R.id.moviesFragment
         } else {
             super.onBackPressed()
         }
     }
 
     override fun navigateToDetail(id: Int) {
-        val stack = supportFragmentManager.fragments
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, MovieDetailsFragment.newInstance(id))
-            .hide(stack[0])
-            .addToBackStack(null)
-            .commit()
+        navController.navigate(MoviesFragmentDirections
+            .actionMoviesFragmentToMovieDetailsFragment(id))
     }
 }
