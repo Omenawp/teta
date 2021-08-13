@@ -3,13 +3,13 @@ package com.oelrun.teta.adapters.viewholders
 import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.R
-import com.oelrun.teta.data.genre.GenreDto
+import com.oelrun.teta.database.entities.Genre
 import com.oelrun.teta.databinding.ListItemGenreBinding
 
 class GenreViewHolder(private val binding: ListItemGenreBinding)
     : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(clickListener: (item: GenreDto) -> Unit, item: GenreDto) {
+    fun bind(clickListener: (item: Genre) -> Unit, item: Genre) {
         val view = binding.root
         view.text = item.name.lowercase()
         view.setBackgroundResource(

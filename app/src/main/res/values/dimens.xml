@@ -60,6 +60,7 @@
     <dimen name="profile_text_size_btn_exit">16sp</dimen>
     <dimen name="profile_text_size_title_user_name">20sp</dimen>
     <dimen name="profile_text_size_hint_name">12sp</dimen>
+    <dimen name="login_text_size_btn">14sp</dimen>
 
     <!-- paddings -->
     <dimen name="movie_detail_paddings_age_ic">10dp</dimen>

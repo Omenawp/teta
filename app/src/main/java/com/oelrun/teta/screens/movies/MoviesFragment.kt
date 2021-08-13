@@ -15,7 +15,7 @@ import com.oelrun.teta.adapters.MoviesAdapter
 import com.oelrun.teta.adapters.MoviesListener
 import com.oelrun.teta.adapters.decorators.GenresItemDecoration
 import com.oelrun.teta.adapters.decorators.MoviesItemDecoration
-import com.oelrun.teta.data.genre.GenreDto
+import com.oelrun.teta.database.entities.Genre
 import com.oelrun.teta.databinding.FragmentMoviesBinding
 
 class MoviesFragment: Fragment() {
@@ -38,7 +38,7 @@ class MoviesFragment: Fragment() {
         setupGenresAdapter()
 
         binding.swipeContainerMovies.setOnRefreshListener {
-            moviesViewModel.loadMovies(true)
+            moviesViewModel.updateMovies(true)
         }
 
         moviesViewModel.isRefreshing.observe(viewLifecycleOwner, {
@@ -83,7 +83,7 @@ class MoviesFragment: Fragment() {
 
     private fun setupGenresAdapter() {
         adapterGenres = GenresAdapter()
-        val onItemGenresClicked = { item: GenreDto ->
+        val onItemGenresClicked = { item: Genre ->
             Toast.makeText(this.context, item.name, Toast.LENGTH_SHORT).show()
             moviesViewModel.genreChangeSelection(item)
             adapterGenres.notifyDataSetChanged()
