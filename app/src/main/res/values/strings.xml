@@ -47,4 +47,9 @@
     <!-- notifications -->
     <string name="teta_notification_channel_id" translatable="false">teta_channel</string>
     <string name="teta_notification_channel_name" translatable="false">channel_name</string>
+
+    <!-- errors -->
+    <string name="profile_invalid_name">The name\'s length should be 3 to 15 symbols</string>
+    <string name="profile_invalid_phone">Invalid phone number. Example: 8 (900) 000 00 00</string>
+    <string name="profile_error">Unknown error</string>
 </resources>

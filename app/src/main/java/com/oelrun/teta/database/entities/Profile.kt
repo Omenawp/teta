@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 class Profile(
     @PrimaryKey
     val userId: Int,
-    val userName: String,
-    val password: String,
-    val phoneNumber: String?,
-    val email: String,
+    var userName: String,
+    var password: String,
+    var phoneNumber: String?,
+    var email: String,
     val photoUrl: Int?
 )

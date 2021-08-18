@@ -72,6 +72,10 @@ class TetaRepositoryImpl constructor(
         return userData
     }
 
+    override suspend fun updateProfile(newProfile: Profile) {
+        database.profileDao().insert(newProfile)
+    }
+
     override suspend fun deleteProfile() {
         database.profileDao().deleteProfile()
     }
