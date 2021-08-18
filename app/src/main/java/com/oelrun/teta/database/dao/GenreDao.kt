@@ -11,7 +11,6 @@ interface GenreDao {
     @Query("SELECT * FROM genre")
     suspend fun getAllGenres(): List<Genre>
 
-    @Transaction
     @Query("DELETE FROM genre WHERE genreId = :genreId")
     suspend fun deleteGeneres(genreId: Int)
 }

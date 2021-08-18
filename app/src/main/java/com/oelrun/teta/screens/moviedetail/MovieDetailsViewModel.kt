@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.oelrun.teta.database.AppDatabase
 import com.oelrun.teta.database.entities.relations.MovieFullInfo
-import kotlinx.coroutines.Dispatchers
+import com.oelrun.teta.network.MovieApi
+import com.oelrun.teta.repository.TetaRepositoryImpl
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MovieDetailsViewModel(application: Application): AndroidViewModel(application) {
     private val _movieDetails = MutableLiveData<MovieFullInfo?>()
@@ -15,18 +15,15 @@ class MovieDetailsViewModel(application: Application): AndroidViewModel(applicat
     private var _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?> = _errorMessage
 
-    private val database = AppDatabase.getInstance(application)
+    private val repository = TetaRepositoryImpl(
+        MovieApi.webservice,
+        AppDatabase.getInstance(application.applicationContext)
+    )
 
     fun loadDetails(id: Int) {
         viewModelScope.launch {
             try {
-                /*val data = withContext(Dispatchers.IO) {
-                    MovieApi.repository.getMovieDetails(id)
-                }*/
-                val data = withContext(Dispatchers.IO) {
-                    database.movieDao().getMovieWithFullInfo(id)
-                }
-                _movieDetails.value = data[0]
+                _movieDetails.value = repository.getMovieDetails(id)
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }

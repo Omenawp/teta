@@ -12,8 +12,8 @@ data class MovieDto(
     val ageRestriction: Int,
     val releaseDate: String,
     val imageUrl: String
-) {
-    fun convertToMovieEntity() = Movie(
-        id, title, description, rateScore, ageRestriction, releaseDate, imageUrl
-    )
-}
+)
+
+fun MovieDto.convertToMovieEntity() = Movie(
+    id, title, description, rateScore, ageRestriction, releaseDate, imageUrl
+)

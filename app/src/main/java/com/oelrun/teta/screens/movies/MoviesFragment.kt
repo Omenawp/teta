@@ -38,7 +38,7 @@ class MoviesFragment: Fragment() {
         setupGenresAdapter()
 
         binding.swipeContainerMovies.setOnRefreshListener {
-            moviesViewModel.updateMovies(true)
+            moviesViewModel.loadMovies(true)
         }
 
         moviesViewModel.isRefreshing.observe(viewLifecycleOwner, {

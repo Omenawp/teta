@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.oelrun.teta.database.entities.Genre
 import com.oelrun.teta.database.entities.Profile
@@ -22,7 +23,6 @@ class ProfileFragment: Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val profileViewModel: ProfileViewModel by viewModels()
-    private var logoutAction: LogoutAction? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,22 +46,18 @@ class ProfileFragment: Fragment() {
         binding.userPhone.setOnEditorActionListener(editorActionListener)
 
         binding.btnExit.setOnClickListener {
-            //Toast.makeText(context, resources.getString(R.string.profile_exit_message), Toast.LENGTH_SHORT).show()
-            logoutAction?.logout()
+            profileViewModel.logout()
+            this.findNavController().navigate(
+                ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
         }
 
-        profileViewModel.favGenres.observe(viewLifecycleOwner, { data ->
-            data?.let {
+        profileViewModel.userProfile.observe(viewLifecycleOwner, { userProfile ->
+            userProfile?.let {
                 binding.profileMainContainer.visibility = View.VISIBLE
-                makeFavItems(it)
+                setProfileInfo(userProfile.profile)
+                makeFavItems(userProfile.genres)
             }
             binding.loadingImage.visibility = View.GONE
-        })
-
-        profileViewModel.userProfile.observe(viewLifecycleOwner, { profile ->
-            profile?.let {
-                setProfileInfo(profile)
-            }
         })
 
         profileViewModel.errorMessage.observe(viewLifecycleOwner, { message ->
@@ -107,21 +103,4 @@ class ProfileFragment: Fragment() {
         super.onDestroy()
         _binding = null
     }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is LogoutAction){
-            logoutAction = context
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        logoutAction = null
-    }
-}
-
-
-interface LogoutAction {
-    fun logout()
 }

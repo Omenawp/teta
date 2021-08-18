@@ -6,13 +6,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.oelrun.teta.database.AppDatabase
 import com.oelrun.teta.database.entities.Genre
 import com.oelrun.teta.database.entities.Movie
-import com.oelrun.teta.database.entities.relations.MovieActorCrossRef
-import com.oelrun.teta.database.entities.relations.MovieFullInfo
-import com.oelrun.teta.database.entities.relations.MovieGenreCrossRef
 import com.oelrun.teta.network.MovieApi
-import kotlinx.coroutines.Dispatchers
+import com.oelrun.teta.repository.TetaRepositoryImpl
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MoviesViewModel(application: Application): AndroidViewModel(application) {
     private val _moviesData = MutableLiveData<List<Movie>>()
@@ -31,7 +27,10 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
     val firstItemMovie
         get() = _firstItemMovie
 
-    private val database = AppDatabase.getInstance(application)
+    private val repository = TetaRepositoryImpl(
+        MovieApi.webservice,
+        AppDatabase.getInstance(application.applicationContext)
+    )
 
     init {
         loadGenres()
@@ -44,17 +43,7 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
 
         viewModelScope.launch {
             try {
-                var data = withContext(Dispatchers.IO) {
-                    database.movieDao().getAllMovies()
-                }
-                if(data.isEmpty()) {
-                    val networkData = withContext(Dispatchers.IO) {
-                        MovieApi.repository.getMovies(refresh)
-                    }
-                    saveToDatabase(networkData)
-                    data = networkData.map { it.movie }
-                }
-                _moviesData.value = data
+                _moviesData.value = repository.getMovies(refresh)
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
@@ -62,49 +51,10 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun updateMovies(refresh: Boolean) {
-        viewModelScope.launch {
-            database.movieDao().deleteMovies()
-            database.actorDao().clearActors()
-            loadMovies(refresh)
-        }
-    }
-
-    private fun saveToDatabase(networkData: List<MovieFullInfo>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            networkData.forEach { full ->
-                val id = full.movie.movieId
-                database.movieDao().insertAll(full.movie)
-
-                full.actors?.let { actors ->
-                    database.actorDao().insertAll(*actors.toTypedArray())
-                    val actorsCrossRef = actors.map { MovieActorCrossRef(id, it.actorId) }
-                    database.movieDao().insertMovieActorCrossRef(*actorsCrossRef.toTypedArray())
-                }
-
-                full.genres.let { list ->
-                    val genresCrossRef = list.map { MovieGenreCrossRef(id, it.genreId) }
-                    database.movieDao().insertMovieGenreCrossRef(*genresCrossRef.toTypedArray())
-                }
-            }
-        }
-    }
-
     private fun loadGenres() {
         viewModelScope.launch {
             try {
-                var data = withContext(Dispatchers.IO) {
-                    database.genreDao().getAllGenres()
-                }
-                if(data.isEmpty()) {
-                    val networkData = withContext(Dispatchers.IO) {
-                        MovieApi.repository.getGenres()
-                    }
-                    database.genreDao().insertAll(*networkData.toTypedArray())
-                    data = networkData
-                }
-                _genresData.value = data
-
+                _genresData.value = repository.getGenres()
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
