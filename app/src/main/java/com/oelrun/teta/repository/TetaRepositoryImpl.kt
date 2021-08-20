@@ -5,8 +5,8 @@ import com.oelrun.teta.database.entities.Genre
 import com.oelrun.teta.database.entities.Movie
 import com.oelrun.teta.database.entities.Profile
 import com.oelrun.teta.database.entities.relations.*
-import com.oelrun.teta.network.MovieApi
 import com.oelrun.teta.network.MovieApiService
+import com.oelrun.teta.network.response.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -23,13 +23,43 @@ class TetaRepositoryImpl constructor(
         }
         if(data.isEmpty()) {
             val networkData = withContext(Dispatchers.IO) {
-                webservice.getMovies(refresh)
+                webservice.getPopularMovies()
             }
-            saveMovies(networkData)
-            data = networkData.map { it.movie }
+            networkData.errorMessage?.let { throw Exception(it) }
+            networkData.movies?.let { movies ->
+                data = movies.map { movie ->
+                    val cast = withContext(Dispatchers.IO) {
+                        webservice.getMovieCredits(movie.id)
+                    }
+                    cast.cast?.let { saveCast(movie.id, it) }
+
+                    val genresCrossRef = movie.genres.map { MovieGenreCrossRef(movie.id, it) }
+                    database.movieDao().insertMovieGenreCrossRef(*genresCrossRef.toTypedArray())
+
+                    val response = withContext(Dispatchers.IO) {
+                        webservice.getMovieAgeRestriction(movie.id)
+                    }
+                    val age = findAgeRestriction(response)
+                    movie.convertToMovieEntity(age)
+                }
+                database.movieDao().insertAll(*data.toTypedArray())
+            }
         }
 
         return data
+    }
+
+    private fun findAgeRestriction(data: ObjectAgeResponse): String? {
+        var age: String? = null
+        val releaseRu = data.results?.filter { it.country == "RU" }
+        if(!releaseRu.isNullOrEmpty()) {
+            val release = releaseRu[0].data.filter { it.certification != "" }
+            if (!release.isNullOrEmpty()) {
+                age = release[0].certification
+            }
+        }
+
+        return age
     }
 
     override suspend fun getMovieDetails(id: Int): MovieFullInfo = withContext(Dispatchers.IO) {
@@ -42,10 +72,13 @@ class TetaRepositoryImpl constructor(
         }
         if(data.isEmpty()) {
             val networkData = withContext(Dispatchers.IO) {
-                MovieApi.webservice.getGenres()
+                webservice.getGenres()
             }
-            saveGenres(networkData)
-            data = networkData
+            networkData.errorMessage?.let { throw Exception(it) }
+            networkData.genres?.let {
+                data = it.map { it.convertToGenreEntity() }
+                saveGenres(data)
+            }
         }
 
         return data
@@ -80,22 +113,11 @@ class TetaRepositoryImpl constructor(
         database.profileDao().deleteProfile()
     }
 
-    private suspend fun saveMovies(networkData: List<MovieFullInfo>) {
-        networkData.forEach { full ->
-            val id = full.movie.movieId
-            database.movieDao().insertAll(full.movie)
-
-            full.actors?.let { actors ->
-                database.actorDao().insertAll(*actors.toTypedArray())
-                val actorsCrossRef = actors.map { MovieActorCrossRef(id, it.actorId) }
-                database.movieDao().insertMovieActorCrossRef(*actorsCrossRef.toTypedArray())
-            }
-
-            full.genres.let { list ->
-                val genresCrossRef = list.map { MovieGenreCrossRef(id, it.genreId) }
-                database.movieDao().insertMovieGenreCrossRef(*genresCrossRef.toTypedArray())
-            }
-        }
+    private suspend fun saveCast(movieId: Int, cast: List<ActorResponse>) {
+        val data = cast.map { it.convertToActorEntity() }
+        val actorsCrossRef = cast.map { MovieActorCrossRef(movieId, it.actorId) }
+        database.actorDao().insertAll(*data.toTypedArray())
+        database.movieDao().insertMovieActorCrossRef(*actorsCrossRef.toTypedArray())
     }
 
     private suspend fun deleteMovies() {

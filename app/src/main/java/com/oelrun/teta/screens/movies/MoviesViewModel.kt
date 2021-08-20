@@ -3,10 +3,11 @@ package com.oelrun.teta.screens.movies
 import android.app.Application
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
+import com.oelrun.teta.R
 import com.oelrun.teta.database.AppDatabase
 import com.oelrun.teta.database.entities.Genre
 import com.oelrun.teta.database.entities.Movie
-import com.oelrun.teta.network.MovieApi
+import com.oelrun.teta.network.MovieApiClient
 import com.oelrun.teta.repository.TetaRepositoryImpl
 import kotlinx.coroutines.launch
 
@@ -23,12 +24,14 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
     private var _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?> = _errorMessage
 
+    val res = application.resources
+
     private var _firstItemMovie = -1
     val firstItemMovie
         get() = _firstItemMovie
 
     private val repository = TetaRepositoryImpl(
-        MovieApi.webservice,
+        MovieApiClient.service,
         AppDatabase.getInstance(application.applicationContext)
     )
 
@@ -43,9 +46,14 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
 
         viewModelScope.launch {
             try {
-                _moviesData.value = repository.getMovies(refresh)
+                val data = repository.getMovies(refresh)
+                if(data.isEmpty()) {
+                    _errorMessage.value = res.getString(R.string.movie_list_error_message_empty)
+                }
+                _moviesData.value = data
             } catch (e: Exception) {
                 _errorMessage.value = e.message
+                _moviesData.value = emptyList()
             }
             _isRefreshing.value = false
         }
@@ -66,10 +74,6 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
             val i = genres.indexOf(item)
             genres[i].selected = !item.selected
         }
-    }
-
-    fun errorMessageShown() {
-        _errorMessage.value = null
     }
 
     fun savePosition(lm: GridLayoutManager) {

@@ -6,7 +6,7 @@ import com.oelrun.teta.R
 import com.oelrun.teta.database.AppDatabase
 import com.oelrun.teta.database.entities.Profile
 import com.oelrun.teta.database.entities.relations.ProfileWithGenres
-import com.oelrun.teta.network.MovieApi
+import com.oelrun.teta.network.MovieApiClient
 import com.oelrun.teta.repository.AuthManager
 import com.oelrun.teta.repository.TetaRepositoryImpl
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ class ProfileViewModel(application: Application): AndroidViewModel(application) 
     val editErrorMessage: LiveData<String?> = _editErrorMessage
 
     private val repository = TetaRepositoryImpl(
-        MovieApi.webservice,
+        MovieApiClient.service,
         AppDatabase.getInstance(application.applicationContext)
     )
 

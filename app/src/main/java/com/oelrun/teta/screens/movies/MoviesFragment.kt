@@ -46,9 +46,8 @@ class MoviesFragment: Fragment() {
         })
 
         moviesViewModel.moviesData.observe(viewLifecycleOwner, { data ->
-            if(data.isEmpty()) {
-                binding.errorMessage.visibility = View.VISIBLE
-            } else {
+            if(data.isNotEmpty()) {
+                binding.listMovies.visibility = View.VISIBLE
                 binding.errorMessage.visibility = View.GONE
                 adapterMovies.addHeaderAndSubmitList(data) {
                     binding.listMovies.post {
@@ -63,9 +62,9 @@ class MoviesFragment: Fragment() {
 
         moviesViewModel.errorMessage.observe(viewLifecycleOwner, { message ->
             message?.let {
+                binding.listMovies.visibility = View.GONE
                 binding.errorMessage.visibility = View.VISIBLE
-                Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
-                moviesViewModel.errorMessageShown()
+                binding.errorMessage.text = it
             }
         })
 

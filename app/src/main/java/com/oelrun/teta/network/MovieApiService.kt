@@ -1,38 +1,23 @@
 package com.oelrun.teta.network
 
-import com.oelrun.teta.data.dto.convertToMovieEntity
-import com.oelrun.teta.data.source.CastDataSource
-import com.oelrun.teta.data.source.GenresDataSource
-import com.oelrun.teta.data.source.MoviesDataSource
-import com.oelrun.teta.database.entities.Genre
-import com.oelrun.teta.database.entities.relations.MovieFullInfo
+import com.oelrun.teta.network.response.ObjectAgeResponse
+import com.oelrun.teta.network.response.ObjectCastResponse
+import com.oelrun.teta.network.response.ObjectGenreResponse
+import com.oelrun.teta.network.response.ObjectMoviesResponse
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
-class MovieApiService {
-    fun getMovies(refresh: Boolean): List<MovieFullInfo> {
-        return MoviesDataSource().getMovies(refresh).map {
-            MovieFullInfo(
-                it.convertToMovieEntity(),
-                CastDataSource().getCastByMovieId(it.id).cast,
-                it.genres
-            )
-        }
-    }
+interface MovieApiService {
+    @GET("movie/popular")
+    suspend fun getPopularMovies(@Query("region") region: String = "ru"): ObjectMoviesResponse
 
-    fun getMovieDetails(id: Int): MovieFullInfo? {
-        return MoviesDataSource().getMovieById(id)?.let {
-            MovieFullInfo(
-                it.convertToMovieEntity(),
-                CastDataSource().getCastByMovieId(it.id).cast,
-                it.genres
-            )
-        }
-    }
+    @GET("movie/{id}/credits")
+    suspend fun getMovieCredits(@Path("id") movieId: Int): ObjectCastResponse
 
-    fun getGenres(): List<Genre> {
-        return GenresDataSource().getGenres()
-    }
-}
+    @GET("movie/{id}/release_dates")
+    suspend fun getMovieAgeRestriction(@Path("id") movieId: Int): ObjectAgeResponse
 
-object MovieApi {
-    val webservice = MovieApiService()
+    @GET("genre/movie/list")
+    suspend fun getGenres(): ObjectGenreResponse
 }

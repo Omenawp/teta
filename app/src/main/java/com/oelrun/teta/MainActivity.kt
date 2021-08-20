@@ -40,8 +40,4 @@ class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
         navController.navigate(MoviesFragmentDirections
             .actionMoviesFragmentToMovieDetailsFragment(id))
     }
-
-    companion object {
-        private const val KEY_NAME = "token"
-    }
 }
