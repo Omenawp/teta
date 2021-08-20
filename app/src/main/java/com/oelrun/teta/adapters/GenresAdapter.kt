@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.adapters.viewholders.GenreViewHolder
-import com.oelrun.teta.data.genre.GenreDto
+import com.oelrun.teta.database.entities.Genre
 import com.oelrun.teta.databinding.ListItemGenreBinding
 
 class GenresAdapter: RecyclerView.Adapter<GenreViewHolder>() {
 
-    lateinit var clickListener: (item: GenreDto) -> Unit
-    var list = listOf<GenreDto>()
+    lateinit var clickListener: (item: Genre) -> Unit
+    var list = listOf<Genre>()
         set(value) {
             field = value
             notifyDataSetChanged()

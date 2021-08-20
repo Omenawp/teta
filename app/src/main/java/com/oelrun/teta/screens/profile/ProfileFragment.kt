@@ -11,8 +11,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import coil.load
 import com.oelrun.teta.R
-import com.oelrun.teta.data.genre.GenreDto
+import com.oelrun.teta.database.entities.Genre
+import com.oelrun.teta.database.entities.Profile
 import com.oelrun.teta.databinding.FragmentProfileBinding
 import com.oelrun.teta.databinding.ListItemGenreBinding
 
@@ -32,6 +35,15 @@ class ProfileFragment: Fragment() {
         val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val editorActionListener = TextView.OnEditorActionListener { textView, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE) {
+                val newText = textView.text.toString()
+
+                val old = when(textView.id) {
+                    R.id.user_name -> profileViewModel.changeName(newText)
+                    R.id.user_phone -> profileViewModel.changePhone(newText)
+                    else -> null
+                }
+
+                if(old != null) { textView.text = old }
                 textView.clearFocus()
                 imm.hideSoftInputFromWindow(textView.windowToken, 0)
             }
@@ -44,13 +56,16 @@ class ProfileFragment: Fragment() {
         binding.userPhone.setOnEditorActionListener(editorActionListener)
 
         binding.btnExit.setOnClickListener {
-            Toast.makeText(context, resources.getString(R.string.profile_exit_message), Toast.LENGTH_SHORT).show()
+            profileViewModel.logout()
+            this.findNavController().navigate(
+                ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
         }
 
-        profileViewModel.favGenres.observe(viewLifecycleOwner, { data ->
-            data?.let {
+        profileViewModel.userProfile.observe(viewLifecycleOwner, { userProfile ->
+            userProfile?.let {
                 binding.profileMainContainer.visibility = View.VISIBLE
-                makeFavItems(data)
+                setProfileInfo(userProfile.profile)
+                makeFavItems(userProfile.genres)
             }
             binding.loadingImage.visibility = View.GONE
         })
@@ -63,10 +78,27 @@ class ProfileFragment: Fragment() {
             }
         })
 
+        profileViewModel.editErrorMessage.observe(viewLifecycleOwner, { message ->
+            message?.let {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                profileViewModel.editErrorMessageShown()
+            }
+        })
+
         return binding.root
     }
 
-    private fun makeFavItems(data: List<GenreDto>) {
+    private fun setProfileInfo(profile: Profile) {
+        binding.titleUserName.text = profile.userName
+        binding.titleUserEmail.text = profile.email
+        binding.userName.setText(profile.userName)
+        binding.userEmail.setText(profile.email)
+        profile.photoUrl?.let {
+            binding.userPhoto.load(it)
+        }
+    }
+
+    private fun makeFavItems(data: List<Genre>) {
         val group = binding.listInterests
         val inflater = LayoutInflater.from(group.context)
 
@@ -74,7 +106,7 @@ class ProfileFragment: Fragment() {
             val genreBinding = ListItemGenreBinding.inflate(inflater, group, false)
             val view = genreBinding.root
             view.text = it.name.lowercase()
-            view.tag = it.id
+            view.tag = it.genreId
             view
         }
 

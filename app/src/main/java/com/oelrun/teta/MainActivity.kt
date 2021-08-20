@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
 
     private lateinit var bottomNavMenu: BottomNavigationView
     private lateinit var navController: NavController
-    //private var onHomeClicked = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,26 +26,10 @@ class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
                 navController.popBackStack()
             }
         }
-
-        // if we need to skip the detailFragment when we return from the profile through "home" btn
-        /*bottomNavMenu.setOnItemSelectedListener {
-            if(it.itemId == R.id.moviesFragment && navController.backQueue.size > 2) {
-                navController.popBackStack()
-                if(onHomeClicked && navController.backQueue.size > 2) {
-                    navController.navigate(R.id.moviesFragment, null)
-                }
-            }
-            if(it.itemId == R.id.profileFragment) {
-                navController.navigate(R.id.profileFragment)
-            }
-            onHomeClicked = true
-            true
-        }*/
     }
 
     override fun onBackPressed() {
         if(bottomNavMenu.selectedItemId == R.id.profileFragment) {
-            //onHomeClicked = false
             bottomNavMenu.selectedItemId = R.id.moviesFragment
         } else {
             super.onBackPressed()
@@ -56,5 +39,9 @@ class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
     override fun navigateToDetail(id: Int) {
         navController.navigate(MoviesFragmentDirections
             .actionMoviesFragmentToMovieDetailsFragment(id))
+    }
+
+    companion object {
+        private const val KEY_NAME = "token"
     }
 }

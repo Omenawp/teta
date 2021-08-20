@@ -1,23 +1,21 @@
 package com.oelrun.teta.screens.movies
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
-import com.oelrun.teta.data.genre.GenreDto
-import com.oelrun.teta.data.movie.MovieDto
+import com.oelrun.teta.database.AppDatabase
+import com.oelrun.teta.database.entities.Genre
+import com.oelrun.teta.database.entities.Movie
 import com.oelrun.teta.network.MovieApi
-import kotlinx.coroutines.Dispatchers
+import com.oelrun.teta.repository.TetaRepositoryImpl
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class MoviesViewModel: ViewModel() {
-    private val _moviesData = MutableLiveData<List<MovieDto>>()
-    val moviesData: LiveData<List<MovieDto>> = _moviesData
+class MoviesViewModel(application: Application): AndroidViewModel(application) {
+    private val _moviesData = MutableLiveData<List<Movie>>()
+    val moviesData: LiveData<List<Movie>> = _moviesData
 
-    private val _genresData = MutableLiveData<List<GenreDto>>()
-    val genresData: LiveData<List<GenreDto>> = _genresData
+    private val _genresData = MutableLiveData<List<Genre>>()
+    val genresData: LiveData<List<Genre>> = _genresData
 
     private var _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -28,6 +26,11 @@ class MoviesViewModel: ViewModel() {
     private var _firstItemMovie = -1
     val firstItemMovie
         get() = _firstItemMovie
+
+    private val repository = TetaRepositoryImpl(
+        MovieApi.webservice,
+        AppDatabase.getInstance(application.applicationContext)
+    )
 
     init {
         loadGenres()
@@ -40,10 +43,7 @@ class MoviesViewModel: ViewModel() {
 
         viewModelScope.launch {
             try {
-                val data = withContext(Dispatchers.IO) {
-                    MovieApi.repository.getMovies(refresh)
-                }
-                _moviesData.value = data
+                _moviesData.value = repository.getMovies(refresh)
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
@@ -54,19 +54,14 @@ class MoviesViewModel: ViewModel() {
     private fun loadGenres() {
         viewModelScope.launch {
             try {
-                val data = withContext(Dispatchers.IO) {
-                    MovieApi.repository.getGenres()
-                }
-                if (data.isNotEmpty()) {
-                    _genresData.value = data
-                }
+                _genresData.value = repository.getGenres()
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
         }
     }
 
-    fun genreChangeSelection(item: GenreDto) {
+    fun genreChangeSelection(item: Genre) {
         _genresData.value?.let { genres ->
             val i = genres.indexOf(item)
             genres[i].selected = !item.selected

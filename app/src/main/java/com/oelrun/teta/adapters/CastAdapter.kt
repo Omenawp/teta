@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.adapters.viewholders.CastViewHolder
-import com.oelrun.teta.data.movie.PersonDto
+import com.oelrun.teta.database.entities.Actor
 import com.oelrun.teta.databinding.ListItemCastBinding
 
 class CastAdapter: RecyclerView.Adapter<CastViewHolder>() {
 
-    var list = listOf<PersonDto>()
+    var list = listOf<Actor>()
         set(value) {
             field = value
             notifyDataSetChanged()

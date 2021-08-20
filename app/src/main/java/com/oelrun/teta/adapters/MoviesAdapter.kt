@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.adapters.viewholders.HeaderViewHolder
 import com.oelrun.teta.adapters.viewholders.MovieViewHolder
-import com.oelrun.teta.data.movie.MovieDto
+import com.oelrun.teta.database.entities.Movie
 import com.oelrun.teta.databinding.ListItemMovieBinding
 import com.oelrun.teta.databinding.ListItemMovieHeaderBinding
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +20,7 @@ class MoviesAdapter(private val clickListener: MoviesListener):
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    fun addHeaderAndSubmitList(list: List<MovieDto>?, callback: () -> Unit) {
+    fun addHeaderAndSubmitList(list: List<Movie>?, callback: () -> Unit) {
         adapterScope.launch {
             list ?: return@launch
             if (list.isNotEmpty()) {
@@ -42,8 +42,8 @@ class MoviesAdapter(private val clickListener: MoviesListener):
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder) {
             is MovieViewHolder -> {
-                val movie = getItem(position) as DataItem.MovieItem
-                holder.bind(clickListener, movie.movie)
+                val item = getItem(position) as DataItem.MovieItem
+                holder.bind(clickListener, item.item)
             }
         }
     }
@@ -82,12 +82,12 @@ class MoviesDiffCallback: DiffUtil.ItemCallback<DataItem>() {
 }
 
 class MoviesListener(val clickListener: (id: Int) -> Unit) {
-    fun onClick(item: MovieDto) = clickListener(item.id)
+    fun onClick(item: Movie) = clickListener(item.movieId)
 }
 
 sealed class DataItem {
-    data class MovieItem(val movie: MovieDto): DataItem() {
-        override val id = movie.id
+    data class MovieItem(val item: Movie): DataItem() {
+        override val id = item.movieId
     }
 
     object Header: DataItem() {

@@ -1,10 +1,38 @@
 package com.oelrun.teta.network
 
-import com.oelrun.teta.data.genre.GenreDto
-import com.oelrun.teta.data.movie.MovieDto
+import com.oelrun.teta.data.dto.convertToMovieEntity
+import com.oelrun.teta.data.source.CastDataSource
+import com.oelrun.teta.data.source.GenresDataSource
+import com.oelrun.teta.data.source.MoviesDataSource
+import com.oelrun.teta.database.entities.Genre
+import com.oelrun.teta.database.entities.relations.MovieFullInfo
 
-interface MovieApiService {
-    suspend fun getMovies(refresh: Boolean): List<MovieDto>
-    suspend fun getMovieDetails(id: Int): MovieDto?
-    suspend fun getGenres(): List<GenreDto>
+class MovieApiService {
+    fun getMovies(refresh: Boolean): List<MovieFullInfo> {
+        return MoviesDataSource().getMovies(refresh).map {
+            MovieFullInfo(
+                it.convertToMovieEntity(),
+                CastDataSource().getCastByMovieId(it.id).cast,
+                it.genres
+            )
+        }
+    }
+
+    fun getMovieDetails(id: Int): MovieFullInfo? {
+        return MoviesDataSource().getMovieById(id)?.let {
+            MovieFullInfo(
+                it.convertToMovieEntity(),
+                CastDataSource().getCastByMovieId(it.id).cast,
+                it.genres
+            )
+        }
+    }
+
+    fun getGenres(): List<Genre> {
+        return GenresDataSource().getGenres()
+    }
+}
+
+object MovieApi {
+    val webservice = MovieApiService()
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "408940102616",
+    "project_id": "teta-2bbd4",
+    "storage_bucket": "teta-2bbd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408940102616:android:390137a9c98bde3c37e8ad",
+        "android_client_info": {
+          "package_name": "com.oelrun.teta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "408940102616-rlq4eus147omf9mbeprbklt5fvsgtj0v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ6hX0ZYuYFEc5fqVxKkTtOPJIWHUzONQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "408940102616-rlq4eus147omf9mbeprbklt5fvsgtj0v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

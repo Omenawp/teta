@@ -11,7 +11,7 @@ import coil.load
 import com.oelrun.teta.R
 import com.oelrun.teta.adapters.CastAdapter
 import com.oelrun.teta.adapters.decorators.CastItemDecorator
-import com.oelrun.teta.data.movie.MovieDto
+import com.oelrun.teta.database.entities.relations.MovieFullInfo
 import com.oelrun.teta.databinding.FragmentMovieDetailsBinding
 
 class MovieDetailsFragment : Fragment() {
@@ -55,10 +55,11 @@ class MovieDetailsFragment : Fragment() {
         return binding.root
     }
 
-    private fun showDetails(movie: MovieDto) {
+    private fun showDetails(item: MovieFullInfo) {
+        val movie = item.movie
         val ageLevel = "${movie.ageRestriction}+"
         binding.imagePoster.load(movie.imageUrl)
-        binding.movieGenreName.text = movie.genre[0].name.lowercase()
+        binding.movieGenreName.text = item.genres[0].name.lowercase() ?: ""
         binding.movieData.text = movie.releaseDate
         binding.movieAgeLevel.text = ageLevel
         binding.movieTitle.text = movie.title
@@ -68,7 +69,7 @@ class MovieDetailsFragment : Fragment() {
             invalidate()
         }
 
-        movie.cast?.let { castAdapter.list = it }
+        item.actors?.let { castAdapter.list = it }
     }
 
     override fun onDestroy() {
