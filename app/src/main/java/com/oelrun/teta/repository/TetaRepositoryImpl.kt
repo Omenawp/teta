@@ -7,46 +7,64 @@ import com.oelrun.teta.database.entities.Profile
 import com.oelrun.teta.database.entities.relations.*
 import com.oelrun.teta.network.MovieApiService
 import com.oelrun.teta.network.response.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
 class TetaRepositoryImpl constructor(
     private val webservice: MovieApiService,
     private val database: AppDatabase
 ): TetaRepository {
 
-    override suspend fun getMovies(refresh: Boolean): List<Movie> {
+    override suspend fun getMovies(refresh: Boolean, page: Int, genreId: Int?): Flow<List<Movie>?>
+     = flow {
         if(refresh) { deleteMovies() }
 
-        var data = withContext(Dispatchers.IO) {
-            database.movieDao().getAllMovies()
-        }
-        if(data.isEmpty()) {
-            val networkData = withContext(Dispatchers.IO) {
-                webservice.getPopularMovies()
+        emit(withContext(Dispatchers.IO) {
+            if(genreId != null) {
+                database.movieDao().getMoviesByGenre(genreId, page)
+            } else {
+                database.movieDao().getPopularMovies(page)
             }
-            networkData.errorMessage?.let { throw Exception(it) }
-            networkData.movies?.let { movies ->
-                data = movies.map { movie ->
-                    val cast = withContext(Dispatchers.IO) {
-                        webservice.getMovieCredits(movie.id)
-                    }
-                    cast.cast?.let { saveCast(movie.id, it) }
+        })
 
-                    val genresCrossRef = movie.genres.map { MovieGenreCrossRef(movie.id, it) }
-                    database.movieDao().insertMovieGenreCrossRef(*genresCrossRef.toTypedArray())
-
-                    val response = withContext(Dispatchers.IO) {
-                        webservice.getMovieAgeRestriction(movie.id)
+        emit(withContext(Dispatchers.IO) {
+            val networkData = withContext(Dispatchers.IO) {
+                try {
+                    if(genreId != null) {
+                        webservice.getMoviesByGenre(genreId = genreId, page = page)
+                    } else {
+                        webservice.getPopularMovies(page = page)
                     }
-                    val age = findAgeRestriction(response)
-                    movie.convertToMovieEntity(age)
+                } catch (e: Exception) {
+                    ObjectMoviesResponse(errorMessage = "No internet connection")
                 }
+            }
+
+            networkData.errorMessage?.let { throw Exception(it) }
+            val data = networkData.movies?.let { movies ->
+                movies.map { movie ->
+                    async {
+                        val cast = withContext(Dispatchers.IO) {
+                            webservice.getMovieCredits(movie.id)
+                        }
+                        cast.cast?.let { saveCast(movie.id, it) }
+
+                        val genresCrossRef = movie.genres.map { MovieGenreCrossRef(movie.id, it) }
+                        database.movieDao().insertMovieGenreCrossRef(*genresCrossRef.toTypedArray())
+
+                        val response = withContext(Dispatchers.IO) {
+                            webservice.getMovieAgeRestriction(movie.id)
+                        }
+                        val age = findAgeRestriction(response)
+                        movie.convertToMovieEntity(age)
+                    }
+                }.awaitAll()
+            }
+            data?.let {
                 database.movieDao().insertAll(*data.toTypedArray())
             }
-        }
-
-        return data
+            data?.sortedByDescending { it.popularity }
+        })
     }
 
     private fun findAgeRestriction(data: ObjectAgeResponse): String? {

@@ -10,7 +10,17 @@ import retrofit2.http.Query
 
 interface MovieApiService {
     @GET("movie/popular")
-    suspend fun getPopularMovies(@Query("region") region: String = "ru"): ObjectMoviesResponse
+    suspend fun getPopularMovies(
+        @Query("region") region: String = "ru",
+        @Query("page") page: Int
+    ): ObjectMoviesResponse
+
+    @GET("discover/movie")
+    suspend fun getMoviesByGenre(
+        @Query("region") region: String = "ru",
+        @Query("with_genres") genreId: Int,
+        @Query("page") page: Int
+    ): ObjectMoviesResponse
 
     @GET("movie/{id}/credits")
     suspend fun getMovieCredits(@Path("id") movieId: Int): ObjectCastResponse

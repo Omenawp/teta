@@ -68,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_main"
         android:textAlignment="center"
+        android:text="@string/movie_list_error_message_empty"
         android:textSize="@dimen/movies_all_text_size_error_message"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

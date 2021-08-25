@@ -22,7 +22,9 @@ data class MovieResponse (
     @SerialName("release_date")
     val releaseDate: String,
     @SerialName("poster_path")
-    val imageUrl: String
+    val imageUrl: String,
+    @SerialName("popularity")
+    val popularity: Float
 )
 
 fun MovieResponse.convertToMovieEntity(age: String?): Movie {
@@ -31,5 +33,5 @@ fun MovieResponse.convertToMovieEntity(age: String?): Movie {
 
 
     val date = releaseDate.split("-").reversed().joinToString(".")
-    return Movie(id, title, description, rateScore, ageRestriction, date, imageUrl)
+    return Movie(id, title, description, rateScore, ageRestriction, date, imageUrl, popularity)
 }
