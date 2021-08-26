@@ -6,9 +6,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.oelrun.teta.database.AppDatabase
 import com.oelrun.teta.database.entities.Genre
 import com.oelrun.teta.database.entities.Movie
-import com.oelrun.teta.network.MovieApi
+import com.oelrun.teta.network.MovieApiClient
 import com.oelrun.teta.repository.TetaRepositoryImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MoviesViewModel(application: Application): AndroidViewModel(application) {
     private val _moviesData = MutableLiveData<List<Movie>>()
@@ -28,9 +32,12 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
         get() = _firstItemMovie
 
     private val repository = TetaRepositoryImpl(
-        MovieApi.webservice,
+        MovieApiClient.service,
         AppDatabase.getInstance(application.applicationContext)
     )
+
+    private var page = 1
+    private var genreId: Int? = null
 
     init {
         loadGenres()
@@ -40,10 +47,22 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
     fun loadMovies(refresh: Boolean) {
         _isRefreshing.value = true
         _firstItemMovie = -1
+        if(refresh) {
+            page = 1
+        }
 
         viewModelScope.launch {
             try {
-                _moviesData.value = repository.getMovies(refresh)
+                val current = page
+                withContext(Dispatchers.IO) {
+                    repository.getMovies(refresh, page, genreId)
+                }.onEach { newData ->
+                    if(newData != null) {
+                        val size = (current - 1) * 20
+                        val list = _moviesData.value?.take(size)?.toMutableList()
+                        _moviesData.value = list?.plus(newData) ?: newData
+                    }
+                }.collect()
             } catch (e: Exception) {
                 _errorMessage.value = e.message
             }
@@ -62,14 +81,22 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun genreChangeSelection(item: Genre) {
-        _genresData.value?.let { genres ->
-            val i = genres.indexOf(item)
-            genres[i].selected = !item.selected
-        }
-    }
+        page = 1
+        _firstItemMovie = 0
+        _moviesData.value = emptyList()
 
-    fun errorMessageShown() {
-        _errorMessage.value = null
+        _genresData.value?.forEach {
+            if(it.genreId == item.genreId) {
+                it.selected = !it.selected
+                genreId = if(it.selected) it.genreId else null
+            } else {
+                if(it.selected) {
+                    it.selected = false
+                }
+            }
+        }
+
+        loadMovies(false)
     }
 
     fun savePosition(lm: GridLayoutManager) {
@@ -78,5 +105,14 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
             pos = lm.findFirstVisibleItemPosition()
         }
         _firstItemMovie = pos
+    }
+
+    fun loadNext() {
+        page++
+        loadMovies(false)
+    }
+
+    fun errorMessageShown() {
+        _errorMessage.value = null
     }
 }

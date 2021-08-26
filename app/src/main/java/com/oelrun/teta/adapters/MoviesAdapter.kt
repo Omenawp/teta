@@ -22,12 +22,11 @@ class MoviesAdapter(private val clickListener: MoviesListener):
 
     fun addHeaderAndSubmitList(list: List<Movie>?, callback: () -> Unit) {
         adapterScope.launch {
-            list ?: return@launch
-            if (list.isNotEmpty()) {
-                val items = listOf(DataItem.Header) + list.map { DataItem.MovieItem(it) }
-                withContext(Dispatchers.Main) {
-                    submitList(items) { callback() }
-                }
+            val items = if (list.isNullOrEmpty()) ArrayList() else
+                listOf(DataItem.Header) + list.map { DataItem.MovieItem(it) }
+
+            withContext(Dispatchers.Main) {
+                submitList(items) { callback() }
             }
         }
     }

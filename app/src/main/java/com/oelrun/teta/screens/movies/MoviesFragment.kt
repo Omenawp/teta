@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.R
 import com.oelrun.teta.adapters.GenresAdapter
 import com.oelrun.teta.adapters.MoviesAdapter
@@ -46,26 +47,28 @@ class MoviesFragment: Fragment() {
         })
 
         moviesViewModel.moviesData.observe(viewLifecycleOwner, { data ->
-            if(data.isEmpty()) {
-                binding.errorMessage.visibility = View.VISIBLE
-            } else {
+            //if(data.isNotEmpty()) {
+                binding.listMovies.visibility = View.VISIBLE
                 binding.errorMessage.visibility = View.GONE
                 adapterMovies.addHeaderAndSubmitList(data) {
                     binding.listMovies.post {
                         binding.listMovies.invalidateItemDecorations()
                     }
                     if (moviesViewModel.firstItemMovie != -1) {
-                        binding.listMovies.smoothScrollToPosition(moviesViewModel.firstItemMovie)
+                        binding.listMovies.scrollToPosition(moviesViewModel.firstItemMovie)
                     }
                 }
-            }
+            //}
         })
 
         moviesViewModel.errorMessage.observe(viewLifecycleOwner, { message ->
             message?.let {
-                binding.errorMessage.visibility = View.VISIBLE
                 Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
                 moviesViewModel.errorMessageShown()
+                if(moviesViewModel.moviesData.value?.isEmpty() == true) {
+                    binding.listMovies.visibility = View.GONE
+                    binding.errorMessage.visibility = View.VISIBLE
+                }
             }
         })
 
@@ -78,13 +81,27 @@ class MoviesFragment: Fragment() {
             }
         })
 
+        binding.listMovies.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val lm = binding.listMovies.layoutManager as GridLayoutManager
+                val total = lm.itemCount
+                val last = lm.findLastVisibleItemPosition()
+                if(total - last == 5) {
+                    if(moviesViewModel.isRefreshing.value == false) {
+                        moviesViewModel.loadNext()
+                    }
+                }
+            }
+        })
+
         return binding.root
     }
 
     private fun setupGenresAdapter() {
         adapterGenres = GenresAdapter()
         val onItemGenresClicked = { item: Genre ->
-            Toast.makeText(this.context, item.name, Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this.context, item.name, Toast.LENGTH_SHORT).show()
             moviesViewModel.genreChangeSelection(item)
             adapterGenres.notifyDataSetChanged()
         }

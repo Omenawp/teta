@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.oelrun.teta.database.AppDatabase
 import com.oelrun.teta.database.entities.relations.MovieFullInfo
-import com.oelrun.teta.network.MovieApi
+import com.oelrun.teta.network.MovieApiClient
 import com.oelrun.teta.repository.TetaRepositoryImpl
 import kotlinx.coroutines.launch
 
@@ -16,7 +16,7 @@ class MovieDetailsViewModel(application: Application): AndroidViewModel(applicat
     val errorMessage: LiveData<String?> = _errorMessage
 
     private val repository = TetaRepositoryImpl(
-        MovieApi.webservice,
+        MovieApiClient.service,
         AppDatabase.getInstance(application.applicationContext)
     )
 

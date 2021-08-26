@@ -47,7 +47,8 @@ class MovieDetailsFragment : Fragment() {
                 binding.detailRootLayout.visibility = View.GONE
                 Toast.makeText(
                     context,
-                    resources.getString(R.string.movie_detail_error_message), Toast.LENGTH_LONG
+                    resources.getString(R.string.movie_detail_error_message),
+                    Toast.LENGTH_LONG
                 ).show()
             }
         })
@@ -57,11 +58,14 @@ class MovieDetailsFragment : Fragment() {
 
     private fun showDetails(item: MovieFullInfo) {
         val movie = item.movie
-        val ageLevel = "${movie.ageRestriction}+"
-        binding.imagePoster.load(movie.imageUrl)
-        binding.movieGenreName.text = item.genres[0].name.lowercase() ?: ""
+        binding.imagePoster.load(
+            "https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.imageUrl}") {
+            error(R.drawable.broken_image)
+            crossfade(true)
+        }
+        binding.movieGenreName.text = item.genres[0].name.lowercase()
         binding.movieData.text = movie.releaseDate
-        binding.movieAgeLevel.text = ageLevel
+        binding.movieAgeLevel.text = item.movie.ageRestriction
         binding.movieTitle.text = movie.title
         binding.movieDescription.text = movie.description
         binding.movieRating.apply {

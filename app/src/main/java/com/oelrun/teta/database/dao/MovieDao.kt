@@ -17,9 +17,11 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovieActorCrossRef(vararg crossRef: MovieActorCrossRef)
 
-    @Transaction
-    @Query("SELECT * FROM movie")
-    suspend fun getAllMovies(): List<Movie>
+    @Query("SELECT * FROM movie ORDER BY popularity DESC LIMIT 20 OFFSET (:page - 1) * 20")
+    suspend fun getPopularMovies(page: Int): List<Movie>
+
+    @Query("SELECT movie.* FROM movie INNER JOIN moviegenrecrossref ON movie.movieId = moviegenrecrossref.movieId WHERE genreId = :genreId ORDER BY popularity DESC LIMIT 20 OFFSET (:page - 1) * 20")
+    suspend fun getMoviesByGenre(genreId: Int, page: Int): List<Movie>
 
     @Transaction
     @Query("SELECT * FROM movie WHERE movieId = :movieId")

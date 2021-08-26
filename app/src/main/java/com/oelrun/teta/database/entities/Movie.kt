@@ -9,7 +9,9 @@ data class Movie(
     val title: String,
     val description: String,
     val rateScore: Int,
-    val ageRestriction: Int,
+    val ageRestriction: String,
     val releaseDate: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val popularity: Float
+    //val lastUpdate: Long? = null
 )
