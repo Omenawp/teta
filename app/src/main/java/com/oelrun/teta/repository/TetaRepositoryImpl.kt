@@ -17,7 +17,6 @@ class TetaRepositoryImpl constructor(
 
     override suspend fun getMovies(refresh: Boolean, page: Int, genreId: Int?): Flow<List<Movie>?>
      = flow {
-        if(refresh) { deleteMovies() }
 
         emit(withContext(Dispatchers.IO) {
             if(genreId != null) {
@@ -42,6 +41,9 @@ class TetaRepositoryImpl constructor(
 
             networkData.errorMessage?.let { throw Exception(it) }
             val data = networkData.movies?.let { movies ->
+
+                if(refresh) { deleteMovies() }
+
                 movies.map { movie ->
                     async {
                         val cast = withContext(Dispatchers.IO) {
