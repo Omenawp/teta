@@ -27,23 +27,29 @@ class TetaRepositoryImpl constructor(
         })
 
         emit(withContext(Dispatchers.IO) {
-            val networkData = withContext(Dispatchers.IO) {
-                try {
-                    if(genreId != null) {
-                        webservice.getMoviesByGenre(genreId = genreId, page = page)
-                    } else {
-                        webservice.getPopularMovies(page = page)
-                    }
-                } catch (e: Exception) {
-                    ObjectMoviesResponse(errorMessage = "No internet connection")
+            getMoviesFromNetwork(refresh, page, genreId)
+        })
+    }
+
+    suspend fun getMoviesFromNetwork(refresh: Boolean, page: Int, genreId: Int? = null): List<Movie>? {
+        val networkData = withContext(Dispatchers.IO) {
+            try {
+                if(genreId != null) {
+                    webservice.getMoviesByGenre(genreId = genreId, page = page)
+                } else {
+                    webservice.getPopularMovies(page = page)
                 }
+            } catch (e: Exception) {
+                ObjectMoviesResponse(errorMessage = "No internet connection")
             }
+        }
 
-            networkData.errorMessage?.let { throw Exception(it) }
-            val data = networkData.movies?.let { movies ->
+        networkData.errorMessage?.let { throw Exception(it) }
+        val data = networkData.movies?.let { movies ->
 
-                if(refresh) { deleteMovies() }
+            if(refresh) { deleteMovies() }
 
+            coroutineScope {
                 movies.map { movie ->
                     async {
                         val cast = withContext(Dispatchers.IO) {
@@ -62,11 +68,11 @@ class TetaRepositoryImpl constructor(
                     }
                 }.awaitAll()
             }
-            data?.let {
-                database.movieDao().insertAll(*data.toTypedArray())
-            }
-            data?.sortedByDescending { it.popularity }
-        })
+        }
+        data?.let {
+            database.movieDao().insertAll(*data.toTypedArray())
+        }
+        return data?.sortedByDescending { it.popularity }
     }
 
     private fun findAgeRestriction(data: ObjectAgeResponse): String? {

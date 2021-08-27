@@ -38,6 +38,7 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
 
     private var page = 1
     private var genreId: Int? = null
+    private var needLoadGenres = true
 
     init {
         loadGenres()
@@ -47,9 +48,9 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
     fun loadMovies(refresh: Boolean) {
         _isRefreshing.value = true
         _firstItemMovie = -1
-        if(refresh) {
-            page = 1
-        }
+        if(refresh) page = 1
+
+        if(needLoadGenres) loadGenres()
 
         viewModelScope.launch {
             try {
@@ -74,8 +75,11 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 _genresData.value = repository.getGenres()
+                if(_genresData.value != null) {
+                    needLoadGenres = false
+                }
             } catch (e: Exception) {
-                _errorMessage.value = e.message
+                //_errorMessage.value = e.message
             }
         }
     }
