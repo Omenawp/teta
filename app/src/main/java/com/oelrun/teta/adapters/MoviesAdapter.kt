@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MoviesAdapter(private val clickListener: MoviesListener):
+class MoviesAdapter(private val clickListener: (Int, ListItemMovieBinding) -> Unit):
     ListAdapter<DataItem, RecyclerView.ViewHolder>(MoviesDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -78,10 +78,6 @@ class MoviesDiffCallback: DiffUtil.ItemCallback<DataItem>() {
     override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
         return oldItem == newItem
     }
-}
-
-class MoviesListener(val clickListener: (id: Int) -> Unit) {
-    fun onClick(item: Movie) = clickListener(item.movieId)
 }
 
 sealed class DataItem {
