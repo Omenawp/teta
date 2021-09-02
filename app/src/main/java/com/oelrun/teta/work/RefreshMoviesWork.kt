@@ -25,7 +25,7 @@ class RefreshMoviesWork(val appContext: Context, params: WorkerParameters):
 
         return try {
             withContext(Dispatchers.IO) {
-                repository.getMoviesFromNetwork(true, 1)
+                repository.getMoviesFromNetwork(true, 1, null, null)
             }
             Result.success()
         } catch (e: HttpException) {

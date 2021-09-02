@@ -20,19 +20,5 @@ data class MovieFullInfo(
         entityColumn = "genreId",
         associateBy = Junction(MovieGenreCrossRef::class)
     )
-    val genres: List<Genre>
+    val genres: List<Genre>?
 )
-
-
-/*
-val movieId: Int,
-val title: String,
-val description: String,
-val rateScore: Int,
-val ageRestriction: Int,
-val releaseDate: String,
-val imageUrl: String,
-@Relation(parentColumn = "movieId", entityColumn = "genreId")
-val genres: List<Genre>,
-@Relation(parentColumn = "movieId", entityColumn = "actorId")
-val actors: List<Actor>? */

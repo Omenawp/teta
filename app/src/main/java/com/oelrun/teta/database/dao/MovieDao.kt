@@ -20,6 +20,9 @@ interface MovieDao {
     @Query("SELECT * FROM movie ORDER BY popularity DESC LIMIT 20 OFFSET (:page - 1) * 20")
     suspend fun getPopularMovies(page: Int): List<Movie>
 
+    @Query("SELECT * FROM movie WHERE title LIKE :search ORDER BY popularity DESC LIMIT 20 OFFSET (:page - 1) * 20")
+    suspend fun getMoviesSearch(search: String, page: Int): List<Movie>
+
     @Query("SELECT movie.* FROM movie INNER JOIN moviegenrecrossref ON movie.movieId = moviegenrecrossref.movieId WHERE genreId = :genreId ORDER BY popularity DESC LIMIT 20 OFFSET (:page - 1) * 20")
     suspend fun getMoviesByGenre(genreId: Int, page: Int): List<Movie>
 

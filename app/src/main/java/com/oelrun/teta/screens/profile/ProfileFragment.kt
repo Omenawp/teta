@@ -43,7 +43,11 @@ class ProfileFragment: Fragment() {
                     else -> null
                 }
 
-                if(old != null) { textView.text = old }
+                if(old != null) {
+                    textView.text = old
+                } else {
+                    updateProfile()
+                }
                 textView.clearFocus()
                 imm.hideSoftInputFromWindow(textView.windowToken, 0)
             }
@@ -86,6 +90,12 @@ class ProfileFragment: Fragment() {
         })
 
         return binding.root
+    }
+
+    private fun updateProfile() {
+        profileViewModel.userProfile.value?.profile?.let {
+            setProfileInfo(it)
+        }
     }
 
     private fun setProfileInfo(profile: Profile) {

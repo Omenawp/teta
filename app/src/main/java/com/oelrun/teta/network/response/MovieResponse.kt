@@ -22,7 +22,7 @@ data class MovieResponse (
     @SerialName("release_date")
     val releaseDate: String,
     @SerialName("poster_path")
-    val imageUrl: String,
+    val imageUrl: String?,
     @SerialName("popularity")
     val popularity: Float
 )

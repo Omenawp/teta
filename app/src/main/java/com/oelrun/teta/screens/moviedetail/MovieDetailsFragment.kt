@@ -130,7 +130,12 @@ class MovieDetailsFragment : Fragment() {
             crossfade(true)
         }
         binding.movieGenreName.visibility = View.VISIBLE
-        binding.movieGenreName.text = item.genres[0].name.lowercase()
+
+        var genreName: String? = null
+        item.genres?.let { if (it.isNotEmpty()) genreName = it[0].name }
+
+        binding.movieGenreName.text = genreName?.lowercase() ?: "undefined"
+
         binding.movieData.text = movie.releaseDate
         binding.movieAgeLevel.text = item.movie.ageRestriction
         binding.movieTitle.text = movie.title

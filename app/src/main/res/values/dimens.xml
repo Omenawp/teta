@@ -39,6 +39,8 @@
     <dimen name="profile_margin_photo_top">48dp</dimen>
     <dimen name="profile_margin_edit_top">14dp</dimen>
 
+    <dimen name="movies_margin_title_top">10dp</dimen>
+
     <!-- textSize -->
     <dimen name="movie_detail_text_size_genre">10sp</dimen>
     <dimen name="movie_detail_text_size_data">12sp</dimen>
@@ -83,6 +85,7 @@
     <dimen name="menu_icon_size">16dp</dimen>
     <dimen name="profile_height_item">35dp</dimen>
     <dimen name="profile_height_btn_exit">48dp</dimen>
+    <dimen name="movies_search_icon_size">20dp</dimen>
 
     <!-- bgr -->
     <dimen name="movie_detail_corner_radius_card">30dp</dimen>

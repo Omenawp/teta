@@ -1,9 +1,12 @@
 package com.oelrun.teta.screens.movies
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -92,6 +95,43 @@ class MoviesFragment: Fragment() {
             }
         })
 
+        val imm = this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        binding.search.setOnEditorActionListener { textView, i, keyEvent ->
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+                val search = textView.text.toString()
+                moviesViewModel.movieSearch(search)
+                textView.clearFocus()
+                imm.hideSoftInputFromWindow(textView.windowToken, 0)
+            }
+            true
+        }
+
+        binding.searchImage.setOnClickListener {
+            if(moviesViewModel.searchShown) {
+                imm.hideSoftInputFromWindow(binding.search.windowToken, 0)
+                moviesViewModel.movieSearch(null)
+                binding.search.setText("")
+                binding.search.clearFocus()
+                binding.search.visibility = View.INVISIBLE
+                binding.searchImage.setImageDrawable(resources.getDrawable(R.drawable.ic_search))
+            } else {
+                binding.search.visibility = View.VISIBLE
+                binding.search.requestFocus()
+                imm.showSoftInput(binding.search, 0)
+                binding.searchImage.setImageDrawable(resources.getDrawable(R.drawable.ic_clear))
+            }
+
+            moviesViewModel.changeSearchVisibility()
+            adapterGenres.notifyDataSetChanged()
+        }
+
+        if(moviesViewModel.searchShown) {
+            binding.search.setText(moviesViewModel.search)
+            binding.search.visibility = View.VISIBLE
+            binding.searchImage.setImageDrawable(resources.getDrawable(R.drawable.ic_clear))
+        }
+
         return binding.root
     }
 
@@ -128,7 +168,6 @@ class MoviesFragment: Fragment() {
         }
 
         adapterMovies = MoviesAdapter { id, itemMovieBinding ->
-
             val extras = FragmentNavigatorExtras(
                 itemMovieBinding.posterImage to itemMovieBinding.posterImage.transitionName,
                 itemMovieBinding.movieTitle to itemMovieBinding.movieTitle.transitionName,

@@ -22,6 +22,13 @@ interface MovieApiService {
         @Query("page") page: Int
     ): ObjectMoviesResponse
 
+    @GET("search/movie")
+    suspend fun getMoviesSearch(
+        @Query("region") region: String = "ru",
+        @Query("query") search: String,
+        @Query("page") page: Int
+    ): ObjectMoviesResponse
+
     @GET("movie/{id}/credits")
     suspend fun getMovieCredits(@Path("id") movieId: Int): ObjectCastResponse
 

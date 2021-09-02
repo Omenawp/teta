@@ -38,7 +38,16 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
 
     private var page = 1
     private var genreId: Int? = null
+    private var _search: String? = null
+    val search
+        get() = _search
+
+
     private var needLoadGenres = true
+
+    private var _searchShown = false
+    val searchShown
+        get() = _searchShown
 
     init {
         loadGenres()
@@ -56,7 +65,7 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
             try {
                 val current = page
                 withContext(Dispatchers.IO) {
-                    repository.getMovies(refresh, page, genreId)
+                    repository.getMovies(refresh, page, genreId, _search)
                 }.onEach { newData ->
                     if(newData != null) {
                         val size = (current - 1) * 20
@@ -118,5 +127,29 @@ class MoviesViewModel(application: Application): AndroidViewModel(application) {
 
     fun errorMessageShown() {
         _errorMessage.value = null
+    }
+
+    fun movieSearch(searchText: String?) {
+        //if(searchText == null && _search == null) return
+
+        page = 1
+        _firstItemMovie = 0
+        _moviesData.value = emptyList()
+        _search = searchText
+        loadMovies(false)
+    }
+
+    fun changeSearchVisibility() {
+        _searchShown = !_searchShown
+
+        if(_searchShown) {
+            _genresData.value?.forEach {
+                if(it.selected) {
+                    it.selected = false
+                }
+            }
+            genreId = null
+        }
+
     }
 }

@@ -15,36 +15,41 @@ class TetaRepositoryImpl constructor(
     private val database: AppDatabase
 ): TetaRepository {
 
-    override suspend fun getMovies(refresh: Boolean, page: Int, genreId: Int?): Flow<List<Movie>?>
-     = flow {
+    override suspend fun getMovies(
+        refresh: Boolean,
+        page: Int,
+        genreId: Int?,
+        search: String?): Flow<List<Movie>?> = flow {
 
         emit(withContext(Dispatchers.IO) {
-            if(genreId != null) {
-                database.movieDao().getMoviesByGenre(genreId, page)
-            } else {
-                database.movieDao().getPopularMovies(page)
+            when {
+                genreId != null -> database.movieDao().getMoviesByGenre(genreId, page)
+                search != null -> database.movieDao().getMoviesSearch("%$search%", page)
+                else -> database.movieDao().getPopularMovies(page)
             }
         })
 
         emit(withContext(Dispatchers.IO) {
-            getMoviesFromNetwork(refresh, page, genreId)
+            getMoviesFromNetwork(refresh, page, genreId, search)
         })
     }
 
-    suspend fun getMoviesFromNetwork(refresh: Boolean, page: Int, genreId: Int? = null): List<Movie>? {
+    suspend fun getMoviesFromNetwork(refresh: Boolean, page: Int, genreId: Int?, search: String?): List<Movie>? {
         val networkData = withContext(Dispatchers.IO) {
             try {
-                if(genreId != null) {
-                    webservice.getMoviesByGenre(genreId = genreId, page = page)
-                } else {
-                    webservice.getPopularMovies(page = page)
+                when {
+                    genreId != null -> webservice.getMoviesByGenre(genreId = genreId, page = page)
+                    search != null -> webservice.getMoviesSearch(search = search, page = page)
+                    else -> webservice.getPopularMovies(page = page)
                 }
             } catch (e: Exception) {
-                ObjectMoviesResponse(errorMessage = "No internet connection")
+                ObjectMoviesResponse(errorMessage = "Check internet connection")
             }
         }
 
         networkData.errorMessage?.let { throw Exception(it) }
+        if(networkData.movies?.isNullOrEmpty() == true) { throw Exception("No such movies") }
+
         val data = networkData.movies?.let { movies ->
 
             if(refresh) { deleteMovies() }

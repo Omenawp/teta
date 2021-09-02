@@ -11,7 +11,6 @@ data class Movie(
     val rateScore: Int,
     val ageRestriction: String,
     val releaseDate: String,
-    val imageUrl: String,
+    val imageUrl: String?,
     val popularity: Float
-    //val lastUpdate: Long? = null
 )
