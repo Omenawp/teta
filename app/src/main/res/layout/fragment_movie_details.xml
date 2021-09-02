@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
+        android:scaleType="fitStart"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,11 +24,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bgr_card"
             android:overScrollMode="never"
             android:scrollbars="none"
+            android:visibility="invisible"
             app:behavior_hideable="false"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -35,7 +38,6 @@
                 android:id="@+id/about_movie"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/bgr_card"
                 android:paddingBottom="@dimen/movie_detail_margin_main_to_bottom">
 
                 <TextView
@@ -47,8 +49,7 @@
                     android:background="@drawable/bgr_genre"
                     android:textSize="@dimen/movie_detail_text_size_genre"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="@string/movie_genre_action" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/movie_data"
@@ -58,8 +59,7 @@
                     android:textSize="@dimen/movie_detail_text_size_data"
                     app:layout_constraintBottom_toBottomOf="@+id/movie_genre_name"
                     app:layout_constraintStart_toEndOf="@+id/movie_genre_name"
-                    app:layout_constraintTop_toTopOf="@+id/movie_genre_name"
-                    tools:text="@string/movie_data" />
+                    app:layout_constraintTop_toTopOf="@+id/movie_genre_name" />
 
                 <TextView
                     android:id="@+id/movie_age_level"
@@ -72,8 +72,7 @@
                     android:textAlignment="center"
                     android:textSize="@dimen/movie_detail_text_size_age"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="@string/age_level_18_up" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/movie_title"
@@ -81,13 +80,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_main"
                     android:layout_marginTop="@dimen/movie_detail_margin_title_to_top"
+                    android:background="@color/white"
                     android:fontFamily="@font/roboto_medium"
                     android:textSize="@dimen/movie_detail_text_size_title_movie"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@+id/movie_age_level"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/movie_data"
-                    tools:text="@string/movie_title" />
+                    app:layout_constraintTop_toBottomOf="@+id/movie_data" />
 
                 <com.oelrun.teta.utils.RatingView
                     android:id="@+id/movie_rating"
@@ -96,8 +95,7 @@
                     android:layout_marginStart="@dimen/margin_main"
                     android:layout_marginTop="@dimen/movie_detail_margin_rating_to_title"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/movie_title"
-                    tools:rating="@integer/movie_rating_temp" />
+                    app:layout_constraintTop_toBottomOf="@+id/movie_title" />
 
                 <TextView
                     android:id="@+id/movie_description"
@@ -108,8 +106,7 @@
                     android:textSize="@dimen/movie_detail_text_size_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/movie_rating"
-                    tools:text="@string/movie_description" />
+                    app:layout_constraintTop_toBottomOf="@id/movie_rating" />
 
                 <TextView
                     android:id="@+id/actors_title"
@@ -157,13 +154,13 @@
         android:id="@+id/loading_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="center"
         android:background="@color/white"
+        android:scaleType="center"
         android:src="@drawable/loading_animation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:visibility="gone"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

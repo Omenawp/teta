@@ -1,5 +1,7 @@
 package com.oelrun.teta.screens.moviedetail
 
+import android.animation.ObjectAnimator
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.transition.*
 import coil.load
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.oelrun.teta.R
 import com.oelrun.teta.adapters.CastAdapter
 import com.oelrun.teta.adapters.decorators.CastItemDecorator
@@ -20,6 +24,8 @@ class MovieDetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val detailsViewModel: MovieDetailsViewModel by viewModels()
     private lateinit var castAdapter: CastAdapter
+    private var movieId = 0
+    private var orientationPortrait = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +33,41 @@ class MovieDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
-        val movieId = MovieDetailsFragmentArgs.fromBundle(requireArguments()).idMovie
+
+        orientationPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+        if(orientationPortrait) {
+            val windowHeight = resources.displayMetrics.heightPixels
+            binding.imagePoster.minimumHeight = windowHeight * 3 / 2
+            if (savedInstanceState != null) {
+                slideBottomSheet()
+            }
+        } else {
+            val windowHeight = resources.displayMetrics.heightPixels
+            binding.imagePoster.layoutParams.height = windowHeight
+            binding.imagePoster.layoutParams.width = windowHeight * 2 / 3
+        }
+
+        sharedElementEnterTransition = TransitionSet().apply {
+            addTransition(TransitionInflater.from(requireContext())
+                .inflateTransition(android.R.transition.move))
+                .addListener(object: Transition.TransitionListener {
+                    override fun onTransitionStart(transition: Transition) {}
+
+                    override fun onTransitionEnd(transition: Transition) {
+                        if(orientationPortrait)  slideBottomSheet()
+                    }
+                    override fun onTransitionCancel(transition: Transition) {}
+                    override fun onTransitionPause(transition: Transition) {}
+                    override fun onTransitionResume(transition: Transition) {}
+                })
+            duration = 600
+        }
+
+        sharedElementReturnTransition = TransitionInflater.from(this.context)
+            .inflateTransition(android.R.transition.move)
+
+        movieId = MovieDetailsFragmentArgs.fromBundle(requireArguments()).idMovie
         detailsViewModel.loadDetails(movieId)
 
         castAdapter = CastAdapter()
@@ -56,13 +96,40 @@ class MovieDetailsFragment : Fragment() {
         return binding.root
     }
 
+    private fun slideBottomSheet() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet as View)
+        bottomSheetBehavior.setPeekHeight(0, false)
+        binding.bottomSheet?.visibility = View.VISIBLE
+        ObjectAnimator.ofInt(bottomSheetBehavior, "peekHeight",
+            800)
+            .apply {
+                duration = 800
+                start()
+            }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.imagePoster.transitionName = "transition_image$movieId"
+        binding.movieTitle.transitionName = "transition_title$movieId"
+        binding.movieDescription.transitionName = "transition_about$movieId"
+        binding.movieRating.transitionName = "transition_rating$movieId"
+        binding.movieAgeLevel.transitionName = "transition_age$movieId"
+
+        postponeEnterTransition()
+        binding.imagePoster.post { startPostponedEnterTransition() }
+    }
+
     private fun showDetails(item: MovieFullInfo) {
         val movie = item.movie
         binding.imagePoster.load(
-            "https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.imageUrl}") {
+            "https://www.themoviedb.org/t/p/original${movie.imageUrl}") {
+            allowHardware(false)
             error(R.drawable.broken_image)
             crossfade(true)
         }
+        binding.movieGenreName.visibility = View.VISIBLE
         binding.movieGenreName.text = item.genres[0].name.lowercase()
         binding.movieData.text = movie.releaseDate
         binding.movieAgeLevel.text = item.movie.ageRestriction

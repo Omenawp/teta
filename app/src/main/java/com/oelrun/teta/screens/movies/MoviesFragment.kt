@@ -1,6 +1,5 @@
 package com.oelrun.teta.screens.movies
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +7,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oelrun.teta.R
 import com.oelrun.teta.adapters.GenresAdapter
 import com.oelrun.teta.adapters.MoviesAdapter
-import com.oelrun.teta.adapters.MoviesListener
 import com.oelrun.teta.adapters.decorators.GenresItemDecoration
 import com.oelrun.teta.adapters.decorators.MoviesItemDecoration
 import com.oelrun.teta.database.entities.Genre
@@ -25,7 +25,6 @@ class MoviesFragment: Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapterGenres: GenresAdapter
     private lateinit var adapterMovies: MoviesAdapter
-    private var moviesFragmentClickListener: MoviesFragmentClickListener? = null
     private val moviesViewModel: MoviesViewModel by viewModels()
 
     override fun onCreateView(
@@ -47,18 +46,16 @@ class MoviesFragment: Fragment() {
         })
 
         moviesViewModel.moviesData.observe(viewLifecycleOwner, { data ->
-            //if(data.isNotEmpty()) {
-                binding.listMovies.visibility = View.VISIBLE
-                binding.errorMessage.visibility = View.GONE
-                adapterMovies.addHeaderAndSubmitList(data) {
-                    binding.listMovies.post {
-                        binding.listMovies.invalidateItemDecorations()
-                    }
-                    if (moviesViewModel.firstItemMovie != -1) {
-                        binding.listMovies.scrollToPosition(moviesViewModel.firstItemMovie)
-                    }
+            binding.listMovies.visibility = View.VISIBLE
+            binding.errorMessage.visibility = View.GONE
+            adapterMovies.addHeaderAndSubmitList(data) {
+                binding.listMovies.post {
+                    binding.listMovies.invalidateItemDecorations()
                 }
-            //}
+                if (moviesViewModel.firstItemMovie != -1) {
+                    binding.listMovies.scrollToPosition(moviesViewModel.firstItemMovie)
+                }
+            }
         })
 
         moviesViewModel.errorMessage.observe(viewLifecycleOwner, { message ->
@@ -101,7 +98,6 @@ class MoviesFragment: Fragment() {
     private fun setupGenresAdapter() {
         adapterGenres = GenresAdapter()
         val onItemGenresClicked = { item: Genre ->
-            //Toast.makeText(this.context, item.name, Toast.LENGTH_SHORT).show()
             moviesViewModel.genreChangeSelection(item)
             adapterGenres.notifyDataSetChanged()
         }
@@ -131,9 +127,21 @@ class MoviesFragment: Fragment() {
             }
         }
 
-        adapterMovies = MoviesAdapter(MoviesListener { id ->
-            moviesFragmentClickListener?.navigateToDetail(id)
-        })
+        adapterMovies = MoviesAdapter { id, itemMovieBinding ->
+
+            val extras = FragmentNavigatorExtras(
+                itemMovieBinding.posterImage to itemMovieBinding.posterImage.transitionName,
+                itemMovieBinding.movieTitle to itemMovieBinding.movieTitle.transitionName,
+                itemMovieBinding.movieDescription to itemMovieBinding.movieDescription.transitionName,
+                itemMovieBinding.ratingView to itemMovieBinding.ratingView.transitionName,
+                itemMovieBinding.ageLevel to itemMovieBinding.ageLevel.transitionName
+            )
+
+            this.findNavController().navigate(
+                MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(id),
+                extras
+            )
+        }
 
         binding.listMovies.layoutManager = manager
         binding.listMovies.adapter = adapterMovies
@@ -146,11 +154,10 @@ class MoviesFragment: Fragment() {
         )
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is MoviesFragmentClickListener){
-            moviesFragmentClickListener = context
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        binding.listMovies.post { startPostponedEnterTransition() }
     }
 
     override fun onPause() {
@@ -158,17 +165,8 @@ class MoviesFragment: Fragment() {
         super.onPause()
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        moviesFragmentClickListener = null
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-}
-
-interface MoviesFragmentClickListener {
-    fun navigateToDetail(id: Int)
 }

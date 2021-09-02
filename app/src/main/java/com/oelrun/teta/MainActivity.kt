@@ -8,7 +8,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.oelrun.teta.screens.movies.*
 
-class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavMenu: BottomNavigationView
     private lateinit var navController: NavController
@@ -34,10 +34,5 @@ class MainActivity : AppCompatActivity(), MoviesFragmentClickListener {
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun navigateToDetail(id: Int) {
-        navController.navigate(MoviesFragmentDirections
-            .actionMoviesFragmentToMovieDetailsFragment(id))
     }
 }
