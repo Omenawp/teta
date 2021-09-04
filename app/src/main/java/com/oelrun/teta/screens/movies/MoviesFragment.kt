@@ -58,6 +58,7 @@ class MoviesFragment: Fragment() {
                 if (moviesViewModel.firstItemMovie != -1) {
                     binding.listMovies.scrollToPosition(moviesViewModel.firstItemMovie)
                 }
+                startPostponedEnterTransition()
             }
         })
 
@@ -196,7 +197,6 @@ class MoviesFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
-        binding.listMovies.post { startPostponedEnterTransition() }
     }
 
     override fun onPause() {
